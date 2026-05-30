@@ -15,7 +15,8 @@ export default async function FixedExpensesPage() {
       .select(
         "id, day_of_month, type, category_1st, category_2nd, payment_method, description, amount, active"
       )
-      .order("created_at", { ascending: true }),
+      .order("day_of_month", { ascending: true })
+      .order("id", { ascending: true }),
     supabase
       .from("categories")
       .select("id, name, type, parent_id")
