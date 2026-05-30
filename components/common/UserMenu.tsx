@@ -5,7 +5,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
@@ -22,9 +21,7 @@ export function UserMenu({ email }: { email: string }) {
         {initials}
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuLabel className="font-normal text-neutral-500">
-          {email}
-        </DropdownMenuLabel>
+        <div className="px-2 py-1.5 text-xs text-neutral-500">{email}</div>
         <DropdownMenuSeparator />
         <form action={signOut}>
           <DropdownMenuItem
