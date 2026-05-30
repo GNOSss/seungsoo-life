@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next"
 import { Inter } from "next/font/google"
 import { GlobalHeader } from "@/components/common/GlobalHeader"
+import { Toaster } from "@/components/ui/sonner"
+import { createClient } from "@/lib/supabase/server"
 import "./globals.css"
 
 const inter = Inter({ subsets: ["latin"] })
@@ -15,16 +17,22 @@ export const viewport: Viewport = {
   themeColor: "#ffffff",
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
   return (
     <html lang="ko">
       <body className={inter.className}>
-        <GlobalHeader />
+        <GlobalHeader user={user ? { email: user.email ?? "" } : null} />
         <main>{children}</main>
+        <Toaster />
       </body>
     </html>
   )
