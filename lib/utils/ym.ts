@@ -46,3 +46,17 @@ export function formatYmKorean(ym: string): string {
   const { year, month } = parseYm(ym)
   return `${year}년 ${month}월`
 }
+
+/** 해당 년월의 마지막 일 (예: "2026-02" → 28, "2026-05" → 31) */
+export function lastDayOfMonth(ym: string): number {
+  const { year, month } = parseYm(ym)
+  // new Date(year, month, 0)에서 day=0은 전월 마지막 날 → 의도된 트릭
+  return new Date(year, month, 0).getDate()
+}
+
+/** ym + day_of_month → YYYY-MM-DD. day가 그 달 일수 초과 시 마지막 날로 clamp */
+export function ymWithDay(ym: string, dayOfMonth: number): string {
+  const last = lastDayOfMonth(ym)
+  const day = Math.min(dayOfMonth, last)
+  return `${ym}-${String(day).padStart(2, "0")}`
+}
