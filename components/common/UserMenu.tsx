@@ -26,15 +26,13 @@ export function UserMenu({ email }: { email: string }) {
           {email}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem
-          render={
-            <form action={signOut}>
-              <button type="submit" className="w-full text-left">
-                로그아웃
-              </button>
-            </form>
-          }
-        />
+        <form action={signOut}>
+          <DropdownMenuItem
+            render={<button type="submit" className="w-full text-left" />}
+          >
+            로그아웃
+          </DropdownMenuItem>
+        </form>
       </DropdownMenuContent>
     </DropdownMenu>
   )
