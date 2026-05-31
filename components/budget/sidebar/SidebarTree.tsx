@@ -70,8 +70,36 @@ export function SidebarTree({
         )}
       >
         <div className="flex h-full flex-col overflow-y-auto">
-          {/* 일지 트리 */}
+          {/* 설정 메뉴 */}
           <div className="mb-6">
+            <h2 className="mb-2 px-2 text-xs font-semibold text-neutral-500">
+              ⚙️ 설정
+            </h2>
+            <ul className="space-y-0.5">
+              {SETTINGS_LINKS.map((link) => {
+                const isActive = pathname.startsWith(link.href)
+                return (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      onClick={() => setMobileOpen(false)}
+                      className={cn(
+                        "block rounded px-2 py-1 text-sm transition-colors",
+                        isActive
+                          ? "bg-neutral-100 font-bold text-neutral-900"
+                          : "text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900"
+                      )}
+                    >
+                      ㆍ {link.label}
+                    </Link>
+                  </li>
+                )
+              })}
+            </ul>
+          </div>
+
+          {/* 일지 트리 */}
+          <div className="mb-4">
             <h2 className="mb-2 px-2 text-xs font-semibold text-neutral-500">
               📒 일지
             </h2>
@@ -106,9 +134,9 @@ export function SidebarTree({
             )}
           </div>
 
-          {/* + 생성 버튼 */}
+          {/* + 생성 버튼 (일지 바로 아래) */}
           {createTarget ? (
-            <div className="mb-6 px-2">
+            <div className="px-2">
               <CreateMonthButton
                 ym={createTarget}
                 label={`+ ${parseYm(createTarget).month}월 생성`}
@@ -116,34 +144,6 @@ export function SidebarTree({
               />
             </div>
           ) : null}
-
-          {/* 설정 메뉴 */}
-          <div className="mt-auto">
-            <h2 className="mb-2 px-2 text-xs font-semibold text-neutral-500">
-              ⚙️ 설정
-            </h2>
-            <ul className="space-y-0.5">
-              {SETTINGS_LINKS.map((link) => {
-                const isActive = pathname.startsWith(link.href)
-                return (
-                  <li key={link.href}>
-                    <Link
-                      href={link.href}
-                      onClick={() => setMobileOpen(false)}
-                      className={cn(
-                        "block rounded px-2 py-1 text-sm transition-colors",
-                        isActive
-                          ? "bg-neutral-100 font-bold text-neutral-900"
-                          : "text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900"
-                      )}
-                    >
-                      ㆍ {link.label}
-                    </Link>
-                  </li>
-                )
-              })}
-            </ul>
-          </div>
         </div>
       </aside>
     </>
