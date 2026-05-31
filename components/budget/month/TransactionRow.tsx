@@ -2,7 +2,6 @@
 
 import { useState, useTransition } from "react"
 import { Button } from "@/components/ui/button"
-import { Switch } from "@/components/ui/switch"
 import {
   CategoryDropdowns,
   type CategoryOption,
@@ -208,13 +207,20 @@ export function TransactionRowComponent({
         placeholder="금액"
       />
 
-      <div className="flex items-center justify-center rounded bg-neutral-100/60 py-1">
-        <Switch
-          checked={draft.is_paid}
-          onCheckedChange={onToggleIsPaid}
-          disabled={pending}
-        />
-      </div>
+      <button
+        type="button"
+        onClick={() => onToggleIsPaid(!draft.is_paid)}
+        disabled={pending}
+        className={cn(
+          "rounded-full px-2 py-1 text-xs font-medium transition-colors",
+          draft.is_paid
+            ? "bg-emerald-500 text-white hover:bg-emerald-600"
+            : "bg-neutral-200 text-neutral-600 hover:bg-neutral-300"
+        )}
+        aria-label={draft.is_paid ? "결제 완료" : "결제 대기"}
+      >
+        {draft.is_paid ? "✓ 완료" : "대기"}
+      </button>
 
       <Button
         variant="ghost"
