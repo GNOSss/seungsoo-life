@@ -2,7 +2,6 @@
 
 import { useState, useTransition } from "react"
 import { Button } from "@/components/ui/button"
-import { Switch } from "@/components/ui/switch"
 import {
   Select,
   SelectContent,
@@ -125,15 +124,24 @@ export function FixedExpenseRowComponent({
   return (
     <div
       className={cn(
-        "grid grid-cols-[40px_60px_80px_1fr_1fr_120px_1fr_120px_40px] items-center gap-2 border-b border-neutral-100 px-3 py-2 text-sm",
+        "grid grid-cols-[70px_60px_80px_1fr_1fr_120px_1fr_120px_40px] items-center gap-2 border-b border-neutral-100 px-3 py-2 text-sm",
         !draft.active && "opacity-50"
       )}
     >
-      <Switch
-        checked={draft.active}
-        onCheckedChange={(v) => update({ active: v })}
+      <button
+        type="button"
+        onClick={() => update({ active: !draft.active })}
         disabled={pending}
-      />
+        className={cn(
+          "rounded-full px-2 py-1 text-xs font-medium transition-colors",
+          draft.active
+            ? "bg-emerald-500 text-white hover:bg-emerald-600"
+            : "bg-neutral-200 text-neutral-600 hover:bg-neutral-300"
+        )}
+        aria-label={draft.active ? "활성" : "비활성"}
+      >
+        {draft.active ? "✓ 활성" : "비활성"}
+      </button>
 
       <input
         type="number"
