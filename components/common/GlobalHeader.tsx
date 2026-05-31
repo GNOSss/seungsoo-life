@@ -16,8 +16,12 @@ export function GlobalHeader({ user }: { user: { email: string } | null }) {
 
   return (
     <header className="border-b border-neutral-200">
-      <nav className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
-        <div className="flex items-center gap-6">
+      <nav className="mx-auto grid max-w-5xl grid-cols-[1fr_auto_1fr] items-center px-4 py-3">
+        {/* 좌측 스페이서 (모바일 햄버거 자리 확보) */}
+        <div />
+
+        {/* 중앙 메뉴 */}
+        <div className="flex items-center gap-3 md:gap-6">
           {NAV_ITEMS.map((item) => {
             const isActive = pathname.startsWith(item.href)
             return (
@@ -36,7 +40,11 @@ export function GlobalHeader({ user }: { user: { email: string } | null }) {
             )
           })}
         </div>
-        {user ? <UserMenu email={user.email} /> : null}
+
+        {/* 우측 UserMenu */}
+        <div className="flex justify-end">
+          {user ? <UserMenu email={user.email} /> : null}
+        </div>
       </nav>
     </header>
   )
