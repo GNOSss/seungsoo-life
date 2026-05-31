@@ -56,7 +56,7 @@ export function FixedExpenseTable({
         <span>1차</span>
         <span>2차</span>
         <span>결제수단</span>
-        <span>설명</span>
+        <span>비고</span>
         <span className="text-right">금액</span>
         <span />
       </div>
