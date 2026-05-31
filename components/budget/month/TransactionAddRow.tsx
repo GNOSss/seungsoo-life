@@ -103,7 +103,7 @@ export function TransactionAddRow({
 
   return (
     <div className="border-t border-neutral-200 p-2">
-      <div className="grid grid-cols-[1fr_1fr_50px_120px_1fr_100px_50px_30px] items-center gap-1 text-sm">
+      <div className="grid grid-cols-[1fr_1fr_45px_100px_1fr_120px_70px_30px] items-center gap-1 text-sm">
         <CategoryDropdowns
           categories={categories}
           type={type}
@@ -165,29 +165,31 @@ export function TransactionAddRow({
         />
 
         <input
-          type="number"
-          min={1}
-          step={1}
-          value={draft.amount ?? ""}
-          onChange={(e) =>
+          type="text"
+          inputMode="numeric"
+          value={draft.amount ? draft.amount.toLocaleString("ko-KR") : ""}
+          onChange={(e) => {
+            const digits = e.target.value.replace(/\D/g, "")
             setDraft({
               ...draft,
-              amount: e.target.value ? Number(e.target.value) : null,
+              amount: digits ? Number(digits) : null,
             })
-          }
+          }}
           onKeyDown={(e) => {
             if (e.key === "Enter") save()
           }}
           disabled={pending}
-          className="w-full rounded border border-neutral-300 px-1 py-0.5 text-right"
+          className="w-full rounded border border-neutral-300 px-1 py-0.5 text-right tabular-nums"
           placeholder="금액"
         />
 
-        <Switch
-          checked={draft.is_paid}
-          onCheckedChange={(v) => setDraft({ ...draft, is_paid: v })}
-          disabled={pending}
-        />
+        <div className="flex items-center justify-center rounded bg-neutral-100/60 py-1">
+          <Switch
+            checked={draft.is_paid}
+            onCheckedChange={(v) => setDraft({ ...draft, is_paid: v })}
+            disabled={pending}
+          />
+        </div>
 
         <span />
       </div>

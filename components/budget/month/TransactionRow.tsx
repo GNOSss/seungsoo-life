@@ -116,7 +116,8 @@ export function TransactionRowComponent({
   }
 
   const onChangeAmount = (vStr: string) => {
-    setDraft({ ...draft, amount: vStr ? Number(vStr) : 0 })
+    const digits = vStr.replace(/\D/g, "")
+    setDraft({ ...draft, amount: digits ? Number(digits) : 0 })
   }
 
   const onBlurField = () => {
@@ -143,7 +144,7 @@ export function TransactionRowComponent({
   return (
     <div
       className={cn(
-        "grid grid-cols-[1fr_1fr_50px_120px_1fr_100px_50px_30px] items-center gap-1 border-b border-neutral-100 px-2 py-1.5 text-sm",
+        "grid grid-cols-[1fr_1fr_45px_100px_1fr_120px_70px_30px] items-center gap-1 border-b border-neutral-100 px-2 py-1.5 text-sm",
         draft.is_fixed && "border-l-4 border-l-blue-500 bg-blue-50/30"
       )}
     >
@@ -197,22 +198,23 @@ export function TransactionRowComponent({
       />
 
       <input
-        type="number"
-        min={1}
-        step={1}
-        value={draft.amount || ""}
+        type="text"
+        inputMode="numeric"
+        value={draft.amount ? draft.amount.toLocaleString("ko-KR") : ""}
         onChange={(e) => onChangeAmount(e.target.value)}
         onBlur={onBlurField}
         disabled={pending}
-        className="w-full rounded border border-neutral-300 px-1 py-0.5 text-right"
+        className="w-full rounded border border-neutral-300 px-1 py-0.5 text-right tabular-nums"
         placeholder="금액"
       />
 
-      <Switch
-        checked={draft.is_paid}
-        onCheckedChange={onToggleIsPaid}
-        disabled={pending}
-      />
+      <div className="flex items-center justify-center rounded bg-neutral-100/60 py-1">
+        <Switch
+          checked={draft.is_paid}
+          onCheckedChange={onToggleIsPaid}
+          disabled={pending}
+        />
+      </div>
 
       <Button
         variant="ghost"

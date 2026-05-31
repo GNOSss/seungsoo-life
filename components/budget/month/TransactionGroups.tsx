@@ -21,7 +21,7 @@ export function TransactionGroups({
   const income = transactions.filter((t) => t.type === "income")
 
   return (
-    <div className="grid gap-4 md:grid-cols-2">
+    <div className="grid gap-4 xl:grid-cols-2">
       <TransactionTable
         type="expense"
         transactions={expense}

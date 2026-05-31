@@ -30,14 +30,14 @@ export function TransactionTable({
         {title}
       </div>
 
-      <div className="grid grid-cols-[1fr_1fr_50px_120px_1fr_100px_50px_30px] gap-1 border-b border-neutral-200 bg-neutral-50/50 px-2 py-1.5 text-xs font-medium text-neutral-500">
-        <span>1차 카테고리</span>
-        <span>2차 카테고리</span>
-        <span>날짜</span>
+      <div className="grid grid-cols-[1fr_1fr_45px_100px_1fr_120px_70px_30px] gap-1 border-b border-neutral-200 bg-neutral-50/50 px-2 py-1.5 text-xs font-medium text-neutral-500">
+        <span>1차</span>
+        <span>2차</span>
+        <span>일</span>
         <span>결제수단</span>
         <span>비고</span>
         <span className="text-right">금액</span>
-        <span>결제여부</span>
+        <span className="text-center">결제</span>
         <span />
       </div>
 
