@@ -2,7 +2,6 @@
 
 import { useState, useRef, useEffect, useTransition } from "react"
 import { Button } from "@/components/ui/button"
-import { Switch } from "@/components/ui/switch"
 import { DeleteConfirmDialog } from "@/components/budget/settings/DeleteConfirmDialog"
 import {
   addPaymentMethod,
@@ -173,11 +172,20 @@ function Row({
         </span>
       )}
 
-      <Switch
-        checked={item.active}
-        onCheckedChange={toggleActive}
+      <button
+        type="button"
+        onClick={() => toggleActive(!item.active)}
         disabled={pending}
-      />
+        className={cn(
+          "rounded-full px-2 py-1 text-xs font-medium transition-colors",
+          item.active
+            ? "bg-emerald-500 text-white hover:bg-emerald-600"
+            : "bg-neutral-200 text-neutral-600 hover:bg-neutral-300"
+        )}
+        aria-label={item.active ? "활성" : "비활성"}
+      >
+        {item.active ? "✓ 활성" : "비활성"}
+      </button>
 
       <div className="flex justify-end gap-1">
         <Button
