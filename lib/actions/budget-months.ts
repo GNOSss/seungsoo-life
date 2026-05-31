@@ -83,19 +83,23 @@ export async function createNextMonth(input: { ym: string }): Promise<Result> {
   if (fxErr) return { ok: false, error: fxErr.message }
 
   if (fixed && fixed.length > 0) {
-    const rows = fixed.map((f) => ({
-      user_id: user.id,
-      year_month: parsed.data.ym,
-      date: ymWithDay(parsed.data.ym, f.day_of_month),
-      type: f.type,
-      category_1st: f.category_1st,
-      category_2nd: f.category_2nd,
-      payment_method: f.payment_method,
-      description: f.description,
-      amount: f.amount,
-      is_paid: false,
-      is_fixed: true,
-    }))
+    // day_of_month=0은 "날짜 미정" 플레이스홀더이므로 자동 INSERT 스킵
+    // (PostgreSQL date '2026-05-00'은 invalid)
+    const rows = fixed
+      .filter((f) => f.day_of_month >= 1)
+      .map((f) => ({
+        user_id: user.id,
+        year_month: parsed.data.ym,
+        date: ymWithDay(parsed.data.ym, f.day_of_month),
+        type: f.type,
+        category_1st: f.category_1st,
+        category_2nd: f.category_2nd,
+        payment_method: f.payment_method,
+        description: f.description,
+        amount: f.amount,
+        is_paid: false,
+        is_fixed: true,
+      }))
 
     const { error: txErr } = await supabase.from("transactions").insert(rows)
     if (txErr) return { ok: false, error: txErr.message }

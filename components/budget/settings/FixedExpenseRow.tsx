@@ -268,10 +268,10 @@ export function FixedExpenseRowComponent({
 function allRequiredFilled(r: FixedExpenseRow): boolean {
   return (
     r.day_of_month !== null &&
-    r.day_of_month >= 1 &&
+    r.day_of_month >= 0 &&
     r.day_of_month <= 31 &&
     !!r.category_1st &&
     r.amount !== null &&
-    r.amount > 0
+    r.amount >= 0
   )
 }
