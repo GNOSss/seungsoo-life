@@ -229,19 +229,19 @@ export function FixedExpenseRowComponent({
       />
 
       <input
-        type="number"
-        min={1}
-        step={1}
-        value={draft.amount ?? ""}
-        onChange={(e) =>
+        type="text"
+        inputMode="numeric"
+        value={draft.amount ? draft.amount.toLocaleString("ko-KR") : ""}
+        onChange={(e) => {
+          const digits = e.target.value.replace(/\D/g, "")
           setDraft({
             ...draft,
-            amount: e.target.value ? Number(e.target.value) : null,
+            amount: digits ? Number(digits) : null,
           })
-        }
+        }}
         onBlur={onBlurField}
         disabled={pending}
-        className="w-full rounded border border-neutral-300 px-2 py-1 text-right"
+        className="w-full rounded border border-neutral-300 px-2 py-1 text-right tabular-nums"
         placeholder="금액"
       />
 
