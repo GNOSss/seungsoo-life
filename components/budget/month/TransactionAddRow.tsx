@@ -103,7 +103,7 @@ export function TransactionAddRow({
 
   return (
     <div className="border-t border-neutral-200 p-2">
-      <div className="grid grid-cols-[1fr_1fr_45px_100px_1fr_120px_70px_30px] items-center gap-1 text-sm">
+      <div className="grid grid-cols-[6fr_10fr_45px_100px_15fr_96px_70px_30px] items-center gap-1 text-sm">
         <CategoryDropdowns
           categories={categories}
           type={type}
