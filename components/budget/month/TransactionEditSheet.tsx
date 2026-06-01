@@ -103,14 +103,17 @@ export function TransactionEditSheet({
       toast.error("일은 1~31")
       return
     }
+    const maxDay = lastDayOfMonth(ym)
+    if (draft.day > maxDay) {
+      toast.error(`이 달은 최대 ${maxDay}일까지 입력 가능`)
+      return
+    }
     if (!draft.amount || draft.amount <= 0) {
       toast.error("금액은 양수")
       return
     }
 
-    const maxDay = lastDayOfMonth(ym)
-    const dayClamped = Math.min(draft.day, maxDay)
-    const date = ymWithDay(ym, dayClamped)
+    const date = ymWithDay(ym, draft.day)
 
     startTransition(async () => {
       if (mode === "add") {
@@ -173,7 +176,11 @@ export function TransactionEditSheet({
     })
 
   return (
-    <Drawer.Root open={open} onOpenChange={(o) => !o && onClose()}>
+    <Drawer.Root
+      open={open}
+      onOpenChange={(o) => !o && onClose()}
+      dismissible={!pending}
+    >
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 z-40 bg-black/40" />
         <Drawer.Content className="fixed bottom-0 left-0 right-0 z-50 mx-auto flex max-h-[85vh] max-w-md flex-col rounded-t-xl border-t border-neutral-200 bg-white">
