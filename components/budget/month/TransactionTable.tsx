@@ -30,7 +30,7 @@ export function TransactionTable({
         {title}
       </div>
 
-      <div className="grid grid-cols-[6fr_10fr_45px_100px_15fr_96px_70px_30px] gap-1 border-b border-neutral-200 bg-neutral-50/50 px-2 py-1.5 text-xs font-medium text-neutral-500">
+      <div className="grid grid-cols-[8fr_10fr_45px_100px_13fr_96px_70px_30px] gap-1 border-b border-neutral-200 bg-neutral-50/50 px-2 py-1.5 text-xs font-medium text-neutral-500">
         <span>1차</span>
         <span>2차</span>
         <span>일</span>

@@ -143,7 +143,7 @@ export function TransactionRowComponent({
   return (
     <div
       className={cn(
-        "grid grid-cols-[6fr_10fr_45px_100px_15fr_96px_70px_30px] items-center gap-1 border-b border-neutral-100 px-2 py-1.5 text-sm",
+        "grid grid-cols-[8fr_10fr_45px_100px_13fr_96px_70px_30px] items-center gap-1 border-b border-neutral-100 px-2 py-1.5 text-sm",
         draft.is_fixed && "border-l-4 border-l-blue-500 bg-blue-50/30"
       )}
     >
