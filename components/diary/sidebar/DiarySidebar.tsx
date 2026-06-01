@@ -17,6 +17,7 @@ export async function DiarySidebar() {
     .from("diary_days")
     .select("date")
     .order("date", { ascending: false })
+    .limit(20000)
 
   if (error) {
     return (
