@@ -71,6 +71,7 @@ export function TransactionCardList({
         ym={ym}
         categories={categories}
         paymentMethods={paymentMethods}
+        defaultType={type}
         onClose={() => setEditingId(null)}
       />
     </div>

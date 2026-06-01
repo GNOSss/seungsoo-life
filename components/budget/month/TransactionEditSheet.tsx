@@ -51,9 +51,9 @@ function initialDraftFromRow(row: TransactionRowData): DraftState {
   }
 }
 
-function emptyDraft(): DraftState {
+function emptyDraft(defaultType: "income" | "expense" = "expense"): DraftState {
   return {
-    type: "expense",
+    type: defaultType,
     category_1st: null,
     category_2nd: null,
     day: null,
@@ -71,6 +71,7 @@ export function TransactionEditSheet({
   ym,
   categories,
   paymentMethods,
+  defaultType,
   onClose,
 }: {
   open: boolean
@@ -79,10 +80,11 @@ export function TransactionEditSheet({
   ym: string
   categories: CategoryOption[]
   paymentMethods: { id: string; name: string }[]
+  defaultType?: "income" | "expense"
   onClose: () => void
 }) {
   const [draft, setDraft] = useState<DraftState>(
-    initial ? initialDraftFromRow(initial) : emptyDraft()
+    initial ? initialDraftFromRow(initial) : emptyDraft(defaultType)
   )
   const [askDelete, setAskDelete] = useState(false)
   const [pending, startTransition] = useTransition()
@@ -90,9 +92,9 @@ export function TransactionEditSheet({
   // open되거나 initial 바뀔 때 draft 리셋
   useEffect(() => {
     if (open) {
-      setDraft(initial ? initialDraftFromRow(initial) : emptyDraft())
+      setDraft(initial ? initialDraftFromRow(initial) : emptyDraft(defaultType))
     }
-  }, [open, initial])
+  }, [open, initial, defaultType])
 
   const save = () => {
     if (!draft.category_1st) {
