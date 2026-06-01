@@ -20,14 +20,9 @@ const DESKTOP_CARDS: { label: string; key: keyof MonthlySummaryData }[] = [
   { label: "예상 잔고", key: "expected_balance" },
 ]
 
-const MOBILE_GRID_CARDS: { label: string; key: keyof MonthlySummaryData }[] = [
-  { label: "전월 잔고", key: "opening_balance" },
-  { label: "입금 총액", key: "income_total" },
-  { label: "출금 총액", key: "expense_total" },
-  { label: "실제 출금", key: "paid_total" },
-  { label: "남은 출금", key: "unpaid_total" },
-  { label: "현재 잔고", key: "current_balance" },
-]
+const HERO_KEY: keyof MonthlySummaryData = "expected_balance"
+const HERO_CARD = DESKTOP_CARDS.find((c) => c.key === HERO_KEY)!
+const MOBILE_GRID_CARDS = DESKTOP_CARDS.filter((c) => c.key !== HERO_KEY)
 
 export function MonthlySummary({ summary }: { summary: MonthlySummaryData }) {
   return (
@@ -35,8 +30,8 @@ export function MonthlySummary({ summary }: { summary: MonthlySummaryData }) {
       {/* Mobile: Hero + 2col grid */}
       <div className="space-y-2 md:hidden">
         <SummaryCard
-          label="예상 잔고"
-          amount={Number(summary.expected_balance)}
+          label={HERO_CARD.label}
+          amount={Number(summary[HERO_KEY])}
           hero
         />
         <div className="grid grid-cols-2 gap-2">
