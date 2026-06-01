@@ -2,7 +2,7 @@
 
 **Date:** 2026-06-01
 **Status:** Approved (design Q&A completed)
-**Scope:** `/budget/[ym]` (메인 월 페이지) + `/budget/settings/fixed_expenses`
+**Scope:** `/budget/[ym]` (메인 월 페이지) + `/budget/settings/fixed-expenses`
 
 ---
 
@@ -16,7 +16,7 @@
 - 페이지가 가로로 늘어나면서 **요약카드 7개 (2-col grid)** 도 함께 오른쪽으로 잘림 (`₩4,500,000` 우측 부분 끊김)
 - 페이지 패딩 `p-6` (좌우 24px씩, 합 48px) — 모바일 가용 공간 추가 잠식
 
-`/budget/settings/fixed_expenses` 도 유사 — `grid-cols-[70px_60px_80px_1fr_1fr_120px_1fr_120px_40px]` 9컬럼 (고정폭 합 490px+) 동일 오버플로우.
+`/budget/settings/fixed-expenses` 도 유사 — `grid-cols-[70px_60px_80px_1fr_1fr_120px_1fr_120px_40px]` 9컬럼 (고정폭 합 490px+) 동일 오버플로우.
 
 ### 1.2 헤더는 정상
 
@@ -122,7 +122,7 @@ PRD §3 "모바일: 세로 배치, 일부 컬럼 접기" 방향과 일치.
 | `components/budget/month/TransactionGroups.tsx` | desktop=TransactionTable, mobile=TransactionCardList 동시 렌더 |
 | `components/budget/settings/FixedExpenseTable.tsx` | `hidden md:block`로 감쌈 |
 | `app/budget/[ym]/page.tsx` | `p-3 md:p-6`, `space-y-4 md:space-y-6`, `text-xl md:text-2xl` |
-| `app/budget/settings/fixed_expenses/page.tsx` | 동일 패턴 |
+| `app/budget/settings/fixed-expenses/page.tsx` | 동일 패턴 |
 
 **변경 없음**: `TransactionTable.tsx`, `TransactionRow.tsx`, `TransactionAddRow.tsx`, `FixedExpenseRow.tsx` — 데스크탑 전용으로 격리
 
@@ -269,7 +269,7 @@ Row 3: ₩금액 (text-base)         [결제 pill]
   <h1 className="text-xl font-bold md:text-2xl">{formatYmKorean(params.ym)}</h1>
 ```
 
-### 7.2 `/budget/settings/fixed_expenses/page.tsx`
+### 7.2 `/budget/settings/fixed-expenses/page.tsx`
 
 동일 패턴 (페이지 padding/spacing/heading).
 
