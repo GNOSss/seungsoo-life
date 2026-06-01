@@ -124,7 +124,7 @@ export function FixedExpenseRowComponent({
   return (
     <div
       className={cn(
-        "grid grid-cols-[70px_60px_80px_1fr_1fr_120px_1fr_120px_40px] items-center gap-2 border-b border-neutral-100 px-3 py-2 text-sm",
+        "grid grid-cols-[60px_40px_60px_8fr_10fr_64px_12fr_88px_28px] items-center gap-1 border-b border-neutral-100 px-3 py-2 text-sm",
         !draft.active && "opacity-50"
       )}
     >
@@ -171,8 +171,10 @@ export function FixedExpenseRowComponent({
         }
         disabled={pending}
       >
-        <SelectTrigger>
-          <SelectValue />
+        <SelectTrigger className="w-full">
+          <SelectValue>
+            {(v) => (v === "income" ? "수입" : "출금")}
+          </SelectValue>
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="expense">출금</SelectItem>
@@ -204,7 +206,7 @@ export function FixedExpenseRowComponent({
         onValueChange={(v) => update({ payment_method: v || null })}
         disabled={pending}
       >
-        <SelectTrigger>
+        <SelectTrigger className="w-full">
           <SelectValue placeholder="—" />
         </SelectTrigger>
         <SelectContent>

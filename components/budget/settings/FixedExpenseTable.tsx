@@ -49,7 +49,7 @@ export function FixedExpenseTable({
 
   return (
     <div className="rounded border border-neutral-200">
-      <div className="grid grid-cols-[70px_60px_80px_1fr_1fr_120px_1fr_120px_40px] gap-2 border-b border-neutral-200 bg-neutral-50 px-3 py-2 text-xs font-medium text-neutral-500">
+      <div className="grid grid-cols-[60px_40px_60px_8fr_10fr_64px_12fr_88px_28px] gap-1 border-b border-neutral-200 bg-neutral-50 px-3 py-2 text-xs font-medium text-neutral-500">
         <span>활성</span>
         <span>일</span>
         <span>종류</span>
