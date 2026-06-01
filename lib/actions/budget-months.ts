@@ -32,6 +32,10 @@ const CreateNextMonthSchema = z.object({
   ym: z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/, "ym 형식 오류"),
 })
 
+const DeleteMonthSchema = z.object({
+  ym: z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/, "ym 형식 오류"),
+})
+
 export async function createNextMonth(input: { ym: string }): Promise<Result> {
   const parsed = CreateNextMonthSchema.safeParse(input)
   if (!parsed.success)
@@ -104,6 +108,35 @@ export async function createNextMonth(input: { ym: string }): Promise<Result> {
     // ↑ Phase 3 trg_transactions_recalc fire → monthly_summaries 자동 재계산
     //   (방금 INSERT한 행 + 이후 모든 월 cascade)
   }
+
+  revalidatePath("/budget", "layout")
+  return { ok: true }
+}
+
+export async function deleteMonth(input: { ym: string }): Promise<Result> {
+  const parsed = DeleteMonthSchema.safeParse(input)
+  if (!parsed.success)
+    return { ok: false, error: parsed.error.issues[0]?.message ?? "입력값 오류" }
+
+  const ctx = await getAuthedClient()
+  if (!ctx.ok) return { ok: false, error: ctx.error }
+  const { supabase } = ctx
+
+  // 1. 해당 월의 모든 거래 삭제
+  //    Phase 3 trg_transactions_recalc가 각 삭제마다 fire → 이후 월 잔고 cascade 자동 갱신
+  const { error: txErr } = await supabase
+    .from("transactions")
+    .delete()
+    .eq("year_month", parsed.data.ym)
+  if (txErr) return { ok: false, error: txErr.message }
+
+  // 2. 빈 monthly_summaries row 삭제
+  //    이 시점엔 cascade가 이미 끝났으므로 row만 안전하게 제거
+  const { error: sumErr } = await supabase
+    .from("monthly_summaries")
+    .delete()
+    .eq("year_month", parsed.data.ym)
+  if (sumErr) return { ok: false, error: sumErr.message }
 
   revalidatePath("/budget", "layout")
   return { ok: true }
