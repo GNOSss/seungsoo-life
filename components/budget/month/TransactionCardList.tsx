@@ -5,7 +5,10 @@ import { TransactionCardMobile } from "@/components/budget/month/TransactionCard
 import { TransactionEditSheet } from "@/components/budget/month/TransactionEditSheet"
 import type { TransactionRowData } from "@/components/budget/month/TransactionRow"
 import type { CategoryOption } from "@/components/budget/settings/CategoryDropdowns"
-import { sortTransactionsInGroup } from "@/lib/utils/transactions-sort"
+import {
+  sortTransactionsInGroup,
+  type SortMode,
+} from "@/lib/utils/transactions-sort"
 
 type EditingId = string | "new" | null
 
@@ -15,15 +18,17 @@ export function TransactionCardList({
   categories,
   paymentMethods,
   ym,
+  sortMode = "alpha",
 }: {
   type: "income" | "expense"
   transactions: TransactionRowData[]
   categories: CategoryOption[]
   paymentMethods: { id: string; name: string }[]
   ym: string
+  sortMode?: SortMode
 }) {
   const [editingId, setEditingId] = useState<EditingId>(null)
-  const sorted = sortTransactionsInGroup(transactions)
+  const sorted = sortTransactionsInGroup(transactions, sortMode)
   const title = type === "expense" ? "💸 출금" : "💰 입금"
 
   const sheetOpen = editingId !== null

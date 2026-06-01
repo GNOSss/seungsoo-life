@@ -6,7 +6,10 @@ import {
 } from "@/components/budget/month/TransactionRow"
 import { TransactionAddRow } from "@/components/budget/month/TransactionAddRow"
 import type { CategoryOption } from "@/components/budget/settings/CategoryDropdowns"
-import { sortTransactionsInGroup } from "@/lib/utils/transactions-sort"
+import {
+  sortTransactionsInGroup,
+  type SortMode,
+} from "@/lib/utils/transactions-sort"
 
 export function TransactionTable({
   type,
@@ -14,14 +17,16 @@ export function TransactionTable({
   categories,
   paymentMethods,
   ym,
+  sortMode = "alpha",
 }: {
   type: "income" | "expense"
   transactions: TransactionRowData[]
   categories: CategoryOption[]
   paymentMethods: { id: string; name: string }[]
   ym: string
+  sortMode?: SortMode
 }) {
-  const sorted = sortTransactionsInGroup(transactions)
+  const sorted = sortTransactionsInGroup(transactions, sortMode)
   const title = type === "expense" ? "💸 출금" : "💰 입금"
 
   return (

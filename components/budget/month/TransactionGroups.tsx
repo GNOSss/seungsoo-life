@@ -1,9 +1,12 @@
 "use client"
 
+import { useState } from "react"
+import { cn } from "@/lib/utils"
 import { TransactionTable } from "@/components/budget/month/TransactionTable"
 import { TransactionCardList } from "@/components/budget/month/TransactionCardList"
 import type { TransactionRowData } from "@/components/budget/month/TransactionRow"
 import type { CategoryOption } from "@/components/budget/settings/CategoryDropdowns"
+import type { SortMode } from "@/lib/utils/transactions-sort"
 
 export function TransactionGroups({
   transactions,
@@ -16,11 +19,40 @@ export function TransactionGroups({
   paymentMethods: { id: string; name: string }[]
   ym: string
 }) {
+  const [sortMode, setSortMode] = useState<SortMode>("alpha")
   const expense = transactions.filter((t) => t.type === "expense")
   const income = transactions.filter((t) => t.type === "income")
 
   return (
     <>
+      <div className="flex items-center gap-2 text-xs">
+        <span className="text-neutral-500">정렬:</span>
+        <button
+          type="button"
+          onClick={() => setSortMode("alpha")}
+          className={cn(
+            "rounded-full px-3 py-1 font-medium transition-colors",
+            sortMode === "alpha"
+              ? "bg-neutral-900 text-white"
+              : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200"
+          )}
+        >
+          가나다
+        </button>
+        <button
+          type="button"
+          onClick={() => setSortMode("amount")}
+          className={cn(
+            "rounded-full px-3 py-1 font-medium transition-colors",
+            sortMode === "amount"
+              ? "bg-neutral-900 text-white"
+              : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200"
+          )}
+        >
+          금액 큰 순
+        </button>
+      </div>
+
       {/* Mobile: 카드 스택 (출금 → 입금) */}
       <div className="space-y-4 md:hidden">
         <TransactionCardList
@@ -29,6 +61,7 @@ export function TransactionGroups({
           categories={categories}
           paymentMethods={paymentMethods}
           ym={ym}
+          sortMode={sortMode}
         />
         <TransactionCardList
           type="income"
@@ -36,6 +69,7 @@ export function TransactionGroups({
           categories={categories}
           paymentMethods={paymentMethods}
           ym={ym}
+          sortMode={sortMode}
         />
       </div>
 
@@ -47,6 +81,7 @@ export function TransactionGroups({
           categories={categories}
           paymentMethods={paymentMethods}
           ym={ym}
+          sortMode={sortMode}
         />
         <TransactionTable
           type="income"
@@ -54,6 +89,7 @@ export function TransactionGroups({
           categories={categories}
           paymentMethods={paymentMethods}
           ym={ym}
+          sortMode={sortMode}
         />
       </div>
     </>
