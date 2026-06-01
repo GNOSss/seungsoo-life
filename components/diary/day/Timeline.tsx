@@ -22,9 +22,18 @@ function findEntryAtSlot(
   return null
 }
 
-function isFirstSlot(entry: TimelineEntry, slotStart: number): boolean {
-  const s = timeToMinutes(entry.start_time)
-  return Math.floor(s / 15) * 15 === slotStart
+/**
+ * 라벨 표시 여부:
+ * 1. 활동의 시작 슬롯 (그 활동의 첫 노출)
+ * 2. 매 시간 첫 슬롯 (slotStart % 60 === 0) + 활동이 그 시간을 가로지름
+ *    → 1시간 이상 지속되는 활동은 매 시간마다 다시 라벨 노출
+ */
+function shouldShowLabel(entry: TimelineEntry, slotStart: number): boolean {
+  const activityStartMin = timeToMinutes(entry.start_time)
+  const activityFirstSlot = Math.floor(activityStartMin / 15) * 15
+  if (activityFirstSlot === slotStart) return true
+  if (slotStart % 60 === 0 && activityFirstSlot < slotStart) return true
+  return false
 }
 
 export function Timeline({
@@ -58,7 +67,7 @@ export function Timeline({
                   key={q}
                   entry={entry}
                   slotStartMinute={slotStart}
-                  showLabel={entry ? isFirstSlot(entry, slotStart) : false}
+                  showLabel={entry ? shouldShowLabel(entry, slotStart) : false}
                   onClick={() => entry && setSelected(entry)}
                 />
               )
