@@ -280,7 +280,7 @@ export function FixedExpenseEditSheet({
               <input
                 type="text"
                 inputMode="numeric"
-                value={draft.amount ? draft.amount.toLocaleString("ko-KR") : ""}
+                value={draft.amount != null ? draft.amount.toLocaleString("ko-KR") : ""}
                 onChange={(e) => {
                   const digits = e.target.value.replace(/\D/g, "")
                   setDraft({

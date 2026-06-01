@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useTransition } from "react"
+import { useState, useTransition, useEffect } from "react"
 import { cn } from "@/lib/utils"
 import { updateFixedExpense } from "@/lib/actions/fixed-expenses"
 import { toast } from "sonner"
@@ -21,6 +21,11 @@ export function FixedExpenseCardMobile({
 }) {
   const [active, setActive] = useState(row.active)
   const [pending, startTransition] = useTransition()
+
+  // 부모가 revalidate 후 새 row.active 전달하면 로컬 state 동기화
+  useEffect(() => {
+    setActive(row.active)
+  }, [row.active])
 
   const onToggleActive = (e: React.MouseEvent) => {
     e.stopPropagation()

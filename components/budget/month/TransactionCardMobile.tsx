@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useTransition } from "react"
+import { useState, useTransition, useEffect } from "react"
 import { cn } from "@/lib/utils"
 import { toggleIsPaid } from "@/lib/actions/transactions"
 import { toast } from "sonner"
@@ -21,6 +21,11 @@ export function TransactionCardMobile({
 }) {
   const [isPaid, setIsPaid] = useState(row.is_paid)
   const [pending, startTransition] = useTransition()
+
+  // 부모가 revalidate 후 새 row.is_paid 전달하면 로컬 state 동기화
+  useEffect(() => {
+    setIsPaid(row.is_paid)
+  }, [row.is_paid])
 
   const day = Number(row.date.split("-")[2])
 
