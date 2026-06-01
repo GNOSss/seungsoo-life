@@ -47,8 +47,10 @@ function DialogContent({
 }: DialogPrimitive.Popup.Props & {
   showCloseButton?: boolean
 }) {
+  // Portal 사용 안 함 — vaul Drawer 안에서 클릭이 차단되는 이슈 회피.
+  // fixed positioning은 그대로 적용되므로 viewport 정중앙 위치는 유지.
   return (
-    <DialogPortal>
+    <>
       <DialogOverlay />
       <DialogPrimitive.Popup
         data-slot="dialog-content"
@@ -76,7 +78,7 @@ function DialogContent({
           </DialogPrimitive.Close>
         )}
       </DialogPrimitive.Popup>
-    </DialogPortal>
+    </>
   )
 }
 
