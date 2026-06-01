@@ -1,5 +1,9 @@
 import { createClient } from "@/lib/supabase/server"
-import { getCurrentDate, parseDate } from "@/lib/utils/diary-date"
+import {
+  getCurrentDate,
+  getMondayOf,
+  parseDate,
+} from "@/lib/utils/diary-date"
 import {
   DiarySidebarTree,
   type YearGroup,
@@ -24,16 +28,22 @@ export async function DiarySidebar() {
     )
   }
 
-  const yearMap = new Map<number, Map<number, string[]>>()
+  // diary_days의 date들을 그 주의 월요일로 변환, 중복 제거
+  const mondaySet = new Set<string>()
   for (const r of rows ?? []) {
-    const { year, month } = parseDate(r.date)
+    mondaySet.add(getMondayOf(r.date))
+  }
+  // year > month(=월요일의 월) > [mondays] 그룹화
+  const yearMap = new Map<number, Map<number, string[]>>()
+  for (const monday of Array.from(mondaySet).sort().reverse()) {
+    const { year, month } = parseDate(monday)
     let mm = yearMap.get(year)
     if (!mm) {
       mm = new Map()
       yearMap.set(year, mm)
     }
     const arr = mm.get(month) ?? []
-    arr.push(r.date)
+    arr.push(monday)
     mm.set(month, arr)
   }
   const yearGroups: YearGroup[] = Array.from(yearMap.entries())
@@ -42,10 +52,13 @@ export async function DiarySidebar() {
       year,
       months: Array.from(monthsMap.entries())
         .sort((a, b) => b[0] - a[0])
-        .map(([month, dates]): MonthGroup => ({ month, dates })),
+        .map(([month, mondays]): MonthGroup => ({ month, mondays })),
     }))
 
   return (
-    <DiarySidebarTree yearGroups={yearGroups} currentDate={getCurrentDate()} />
+    <DiarySidebarTree
+      yearGroups={yearGroups}
+      currentMonday={getMondayOf(getCurrentDate())}
+    />
   )
 }

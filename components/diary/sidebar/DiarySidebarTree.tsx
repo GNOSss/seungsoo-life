@@ -4,10 +4,10 @@ import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
-import { DateLink } from "@/components/diary/sidebar/DateLink"
+import { WeekLink } from "@/components/diary/sidebar/WeekLink"
 import { parseDate } from "@/lib/utils/diary-date"
 
-export type MonthGroup = { month: number; dates: string[] }
+export type MonthGroup = { month: number; mondays: string[] }
 export type YearGroup = { year: number; months: MonthGroup[] }
 
 const SETTINGS_LINKS = [
@@ -17,15 +17,13 @@ const SETTINGS_LINKS = [
 
 export function DiarySidebarTree({
   yearGroups,
-  currentDate,
+  currentMonday,
 }: {
   yearGroups: YearGroup[]
-  currentDate: string
+  currentMonday: string
 }) {
-  const { year: currentYear, month: currentMonth } = parseDate(currentDate)
+  const { year: currentYear, month: currentMonth } = parseDate(currentMonday)
   const [mobileOpen, setMobileOpen] = useState(false)
-  // 초기 상태: 오늘이 속한 연도 + 오늘이 속한 월만 펼침.
-  // 다른 월은 213일 사전 생성 데이터로 인해 닫혀있어야 시각적으로 깔끔.
   const [expandedYears, setExpandedYears] = useState<Record<number, boolean>>(
     () => ({ [currentYear]: true })
   )
@@ -96,7 +94,7 @@ export function DiarySidebarTree({
 
           <div className="mb-4">
             <h2 className="mb-2 px-2 text-xs font-semibold text-neutral-500">
-              📔 일기
+              📔 일기 (주간)
             </h2>
             {yearGroups.length === 0 ? (
               <p className="px-2 text-xs text-neutral-400">아직 입력 없음</p>
@@ -132,11 +130,11 @@ export function DiarySidebarTree({
                               </button>
                               {expandedMonths[mKey] ? (
                                 <ul className="ml-3 space-y-0">
-                                  {mg.dates.map((d) => (
-                                    <li key={d}>
-                                      <DateLink
-                                        date={d}
-                                        isCurrent={d === currentDate}
+                                  {mg.mondays.map((monday) => (
+                                    <li key={monday}>
+                                      <WeekLink
+                                        monday={monday}
+                                        isCurrent={monday === currentMonday}
                                       />
                                     </li>
                                   ))}

@@ -55,3 +55,49 @@ export function parseDate(date: string): {
   const [y, m, d] = date.split("-")
   return { year: Number(y), month: Number(m), day: Number(d) }
 }
+
+/** date가 속한 주의 월요일 (월요일 시작 주 기준, 한국식). */
+export function getMondayOf(date: string): string {
+  const d = new Date(`${date}T00:00:00Z`)
+  const dow = d.getUTCDay() // 0=일, 1=월, ..., 6=토
+  const offset = dow === 0 ? 6 : dow - 1
+  d.setUTCDate(d.getUTCDate() - offset)
+  return d.toISOString().slice(0, 10)
+}
+
+/** 월요일 → 그 주의 7일 배열 (월, 화, ..., 일) */
+export function getWeekDays(monday: string): string[] {
+  const result: string[] = []
+  const d = new Date(`${monday}T00:00:00Z`)
+  for (let i = 0; i < 7; i++) {
+    result.push(d.toISOString().slice(0, 10))
+    d.setUTCDate(d.getUTCDate() + 1)
+  }
+  return result
+}
+
+export function getNextMonday(monday: string): string {
+  const d = new Date(`${monday}T00:00:00Z`)
+  d.setUTCDate(d.getUTCDate() + 7)
+  return d.toISOString().slice(0, 10)
+}
+
+export function getPrevMonday(monday: string): string {
+  const d = new Date(`${monday}T00:00:00Z`)
+  d.setUTCDate(d.getUTCDate() - 7)
+  return d.toISOString().slice(0, 10)
+}
+
+/** "6/1 ~ 6/7" (월요일 기준 주 범위) */
+export function formatWeekRange(monday: string): string {
+  const days = getWeekDays(monday)
+  const m = parseDate(days[0])
+  const s = parseDate(days[6])
+  return `${m.month}/${m.day} ~ ${s.month}/${s.day}`
+}
+
+/** 한글 요일 글자 (월/화/...) */
+export function getDayOfWeekKorean(date: string): string {
+  const d = new Date(`${date}T00:00:00`)
+  return ["일", "월", "화", "수", "목", "금", "토"][d.getDay()]
+}
