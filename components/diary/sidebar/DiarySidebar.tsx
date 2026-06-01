@@ -13,11 +13,8 @@ import {
 export async function DiarySidebar() {
   const supabase = await createClient()
 
-  const { data: rows, error } = await supabase
-    .from("diary_days")
-    .select("date")
-    .order("date", { ascending: false })
-    .limit(20000)
+  // RPC 사용: PostgREST 기본 max-rows(1000)에 안 걸리도록 DB 측에서 DISTINCT 주.
+  const { data: rows, error } = await supabase.rpc("get_user_diary_mondays")
 
   if (error) {
     return (
@@ -29,14 +26,10 @@ export async function DiarySidebar() {
     )
   }
 
-  // diary_days의 date들을 그 주의 월요일로 변환, 중복 제거
-  const mondaySet = new Set<string>()
-  for (const r of rows ?? []) {
-    mondaySet.add(getMondayOf(r.date))
-  }
-  // year > month(=월요일의 월) > [mondays] 그룹화. 월·주는 오름차순.
+  // year > month > [mondays] 그룹화. 월·주는 오름차순.
   const yearMap = new Map<number, Map<number, string[]>>()
-  for (const monday of Array.from(mondaySet).sort()) {
+  const mondayList = (rows ?? []).map((r: { monday: string }) => r.monday).sort()
+  for (const monday of mondayList) {
     const { year, month } = parseDate(monday)
     let mm = yearMap.get(year)
     if (!mm) {
