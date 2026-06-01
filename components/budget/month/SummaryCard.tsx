@@ -29,8 +29,8 @@ export function SummaryCard({
       </p>
       <p
         className={cn(
-          "mt-1 font-medium tabular-nums",
-          hero ? "text-lg font-semibold" : "text-sm",
+          "mt-1 tabular-nums",
+          hero ? "text-lg font-semibold" : "text-sm font-medium",
           isNegative ? "text-red-600" : "text-neutral-900"
         )}
       >
