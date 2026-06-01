@@ -1,16 +1,15 @@
 import { notFound } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
-import { isValidYm, formatYmKorean } from "@/lib/utils/ym"
+import { isValidYm, formatYmKorean, getRecentYms } from "@/lib/utils/ym"
 import { CreateMonthButton } from "@/components/budget/sidebar/CreateMonthButton"
 import {
   MonthlySummary,
   type MonthlySummaryData,
 } from "@/components/budget/month/MonthlySummary"
 import { TransactionGroups } from "@/components/budget/month/TransactionGroups"
-import {
-  ExpenseByCategoryChart,
-  type CategoryDatum,
-} from "@/components/budget/month/ExpenseByCategoryChart"
+import type { CategoryDatum } from "@/components/budget/month/ExpenseByCategoryChart"
+import type { TrendDatum } from "@/components/budget/month/IncomeExpenseTrendChart"
+import { ChartsCarousel } from "@/components/budget/month/ChartsCarousel"
 import type { TransactionRowData } from "@/components/budget/month/TransactionRow"
 import type { CategoryOption } from "@/components/budget/settings/CategoryDropdowns"
 
@@ -22,12 +21,14 @@ export default async function MonthPage({
   if (!isValidYm(params.ym)) notFound()
 
   const supabase = await createClient()
+  const recentYms = getRecentYms(params.ym, 6)
 
   const [
     { data: summary, error: sumErr },
     { data: transactions, error: txErr },
     { data: categories, error: catErr },
     { data: paymentMethods, error: pmErr },
+    { data: recentSummaries, error: trendErr },
   ] = await Promise.all([
     supabase
       .from("monthly_summaries")
@@ -52,10 +53,20 @@ export default async function MonthPage({
       .select("id, name")
       .eq("active", true)
       .order("sort_order", { ascending: true }),
+    supabase
+      .from("monthly_summaries")
+      .select("year_month, income_total, expense_total")
+      .in("year_month", recentYms)
+      .order("year_month", { ascending: true }),
   ])
 
-  if (sumErr || txErr || catErr || pmErr) {
-    const msg = sumErr?.message ?? txErr?.message ?? catErr?.message ?? pmErr?.message
+  if (sumErr || txErr || catErr || pmErr || trendErr) {
+    const msg =
+      sumErr?.message ??
+      txErr?.message ??
+      catErr?.message ??
+      pmErr?.message ??
+      trendErr?.message
     return <p className="p-8 text-sm text-red-600">에러: {msg}</p>
   }
 
@@ -110,10 +121,27 @@ export default async function MonthPage({
     ([category, amount]) => ({ category, amount })
   ).sort((a, b) => b.amount - a.amount)
 
+  // 최근 6개월 입금/출금 추이 (없는 월은 0으로 보정)
+  const summaryMap = new Map<
+    string,
+    { income_total: unknown; expense_total: unknown }
+  >()
+  for (const s of recentSummaries ?? []) {
+    summaryMap.set(s.year_month, s)
+  }
+  const trendData: TrendDatum[] = recentYms.map((ym) => {
+    const s = summaryMap.get(ym)
+    return {
+      year_month: ym,
+      income: s ? Number(s.income_total) : 0,
+      expense: s ? Number(s.expense_total) : 0,
+    }
+  })
+
   return (
     <div className="space-y-4 p-3 md:space-y-6 md:p-6">
       <h1 className="text-xl font-bold md:text-2xl">{formatYmKorean(params.ym)}</h1>
-      <ExpenseByCategoryChart data={chartData} />
+      <ChartsCarousel expenseByCategory={chartData} trend={trendData} />
       <MonthlySummary summary={summaryData} />
       <TransactionGroups
         transactions={rows}

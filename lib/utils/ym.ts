@@ -60,3 +60,14 @@ export function ymWithDay(ym: string, dayOfMonth: number): string {
   const day = Math.min(dayOfMonth, last)
   return `${ym}-${String(day).padStart(2, "0")}`
 }
+
+/** ym에서 count개월 만큼 직전 ym들 배열 (오름차순). 예: getRecentYms("2026-06", 6) → ["2026-01","2026-02","2026-03","2026-04","2026-05","2026-06"] */
+export function getRecentYms(ym: string, count: number): string[] {
+  const result: string[] = [ym]
+  let cursor = ym
+  for (let i = 1; i < count; i++) {
+    cursor = getPrevYm(cursor)
+    result.push(cursor)
+  }
+  return result.reverse()
+}
