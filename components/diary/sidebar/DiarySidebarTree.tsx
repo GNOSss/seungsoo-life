@@ -5,6 +5,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { DateLink } from "@/components/diary/sidebar/DateLink"
+import { parseDate } from "@/lib/utils/diary-date"
 
 export type MonthGroup = { month: number; dates: string[] }
 export type YearGroup = { year: number; months: MonthGroup[] }
@@ -21,22 +22,15 @@ export function DiarySidebarTree({
   yearGroups: YearGroup[]
   currentDate: string
 }) {
+  const { year: currentYear, month: currentMonth } = parseDate(currentDate)
   const [mobileOpen, setMobileOpen] = useState(false)
+  // 초기 상태: 오늘이 속한 연도 + 오늘이 속한 월만 펼침.
+  // 다른 월은 213일 사전 생성 데이터로 인해 닫혀있어야 시각적으로 깔끔.
   const [expandedYears, setExpandedYears] = useState<Record<number, boolean>>(
-    () => {
-      const init: Record<number, boolean> = {}
-      if (yearGroups.length > 0) init[yearGroups[0].year] = true
-      return init
-    }
+    () => ({ [currentYear]: true })
   )
   const [expandedMonths, setExpandedMonths] = useState<Record<string, boolean>>(
-    () => {
-      const init: Record<string, boolean> = {}
-      if (yearGroups.length > 0 && yearGroups[0].months.length > 0) {
-        init[`${yearGroups[0].year}-${yearGroups[0].months[0].month}`] = true
-      }
-      return init
-    }
+    () => ({ [`${currentYear}-${currentMonth}`]: true })
   )
   const pathname = usePathname()
 
