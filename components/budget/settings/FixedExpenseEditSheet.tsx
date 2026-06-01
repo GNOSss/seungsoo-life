@@ -14,7 +14,6 @@ import {
   CategoryDropdowns,
   type CategoryOption,
 } from "@/components/budget/settings/CategoryDropdowns"
-import { DeleteConfirmDialog } from "@/components/budget/settings/DeleteConfirmDialog"
 import {
   addFixedExpense,
   updateFixedExpense,
@@ -322,35 +321,52 @@ export function FixedExpenseEditSheet({
             className="flex shrink-0 gap-2 border-t border-neutral-100 px-4 py-3"
             data-vaul-no-drag
           >
-            <Button
-              variant="outline"
-              onClick={onClose}
-              disabled={pending}
-              className="flex-1"
-            >
-              닫기
-            </Button>
-            {mode === "edit" && (
-              <Button
-                variant="destructive"
-                onClick={() => setAskDelete(true)}
-                disabled={pending}
-              >
-                삭제
-              </Button>
+            {askDelete ? (
+              <>
+                <Button
+                  variant="outline"
+                  onClick={() => setAskDelete(false)}
+                  disabled={pending}
+                  className="flex-1"
+                >
+                  취소
+                </Button>
+                <Button
+                  variant="destructive"
+                  onClick={() => {
+                    void onConfirmDelete().then(() => setAskDelete(false))
+                  }}
+                  disabled={pending}
+                  className="flex-1"
+                >
+                  {pending ? "삭제 중..." : "정말 삭제"}
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button
+                  variant="outline"
+                  onClick={onClose}
+                  disabled={pending}
+                  className="flex-1"
+                >
+                  닫기
+                </Button>
+                {mode === "edit" && (
+                  <Button
+                    variant="destructive"
+                    onClick={() => setAskDelete(true)}
+                    disabled={pending}
+                  >
+                    삭제
+                  </Button>
+                )}
+                <Button onClick={save} disabled={pending} className="flex-1">
+                  {pending ? "..." : "저장"}
+                </Button>
+              </>
             )}
-            <Button onClick={save} disabled={pending} className="flex-1">
-              {pending ? "..." : "저장"}
-            </Button>
           </div>
-
-          <DeleteConfirmDialog
-            open={askDelete}
-            onOpenChange={setAskDelete}
-            title="고정지출 삭제"
-            message="이 고정지출을 삭제합니다. 이미 생성된 거래는 영향 없음."
-            onConfirm={onConfirmDelete}
-          />
         </Drawer.Content>
       </Drawer.Portal>
     </Drawer.Root>
