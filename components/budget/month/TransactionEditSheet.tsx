@@ -89,12 +89,14 @@ export function TransactionEditSheet({
   const [askDelete, setAskDelete] = useState(false)
   const [pending, startTransition] = useTransition()
 
-  // open되거나 initial 바뀔 때 draft 리셋
+  // sheet open되거나 다른 row 편집으로 바뀔 때만 draft 리셋.
+  // 부모 재렌더로 initial 참조가 바뀌어도 id가 같으면 reset 안 함 (선택값 보존).
   useEffect(() => {
     if (open) {
       setDraft(initial ? initialDraftFromRow(initial) : emptyDraft(defaultType))
     }
-  }, [open, initial, defaultType])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, initial?.id, defaultType])
 
   const save = () => {
     if (!draft.category_1st) {
