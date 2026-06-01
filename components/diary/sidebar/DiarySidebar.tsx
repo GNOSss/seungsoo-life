@@ -47,7 +47,7 @@ export async function DiarySidebar() {
     mm.set(month, arr)
   }
   const yearGroups: YearGroup[] = Array.from(yearMap.entries())
-    .sort((a, b) => b[0] - a[0]) // year 내림차순 유지 (최근 연도 위)
+    .sort((a, b) => a[0] - b[0]) // year 오름차순 (2026 → 2027)
     .map(([year, monthsMap]) => ({
       year,
       months: Array.from(monthsMap.entries())
