@@ -10,7 +10,7 @@ export type MonthlySummaryData = {
   expected_balance: number
 }
 
-const CARDS: { label: string; key: keyof MonthlySummaryData }[] = [
+const DESKTOP_CARDS: { label: string; key: keyof MonthlySummaryData }[] = [
   { label: "전월 잔고", key: "opening_balance" },
   { label: "입금 총액", key: "income_total" },
   { label: "출금 총액", key: "expense_total" },
@@ -20,16 +20,46 @@ const CARDS: { label: string; key: keyof MonthlySummaryData }[] = [
   { label: "예상 잔고", key: "expected_balance" },
 ]
 
+const MOBILE_GRID_CARDS: { label: string; key: keyof MonthlySummaryData }[] = [
+  { label: "전월 잔고", key: "opening_balance" },
+  { label: "입금 총액", key: "income_total" },
+  { label: "출금 총액", key: "expense_total" },
+  { label: "실제 출금", key: "paid_total" },
+  { label: "남은 출금", key: "unpaid_total" },
+  { label: "현재 잔고", key: "current_balance" },
+]
+
 export function MonthlySummary({ summary }: { summary: MonthlySummaryData }) {
   return (
-    <div className="grid grid-cols-2 gap-2 md:grid-cols-7">
-      {CARDS.map((card) => (
+    <>
+      {/* Mobile: Hero + 2col grid */}
+      <div className="space-y-2 md:hidden">
         <SummaryCard
-          key={card.key}
-          label={card.label}
-          amount={Number(summary[card.key])}
+          label="예상 잔고"
+          amount={Number(summary.expected_balance)}
+          hero
         />
-      ))}
-    </div>
+        <div className="grid grid-cols-2 gap-2">
+          {MOBILE_GRID_CARDS.map((card) => (
+            <SummaryCard
+              key={card.key}
+              label={card.label}
+              amount={Number(summary[card.key])}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Desktop: 7col single row */}
+      <div className="hidden gap-2 md:grid md:grid-cols-7">
+        {DESKTOP_CARDS.map((card) => (
+          <SummaryCard
+            key={card.key}
+            label={card.label}
+            amount={Number(summary[card.key])}
+          />
+        ))}
+      </div>
+    </>
   )
 }
