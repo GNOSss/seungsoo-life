@@ -12,6 +12,7 @@ export type TimelineEntry = {
 
 export function TimelineSlot({
   entry,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   slotStartMinute,
   showLabel,
   onClick,
