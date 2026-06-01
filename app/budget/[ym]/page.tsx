@@ -92,8 +92,8 @@ export default async function MonthPage({
   }))
 
   return (
-    <div className="space-y-6 p-6">
-      <h1 className="text-2xl font-bold">{formatYmKorean(params.ym)}</h1>
+    <div className="space-y-4 p-3 md:space-y-6 md:p-6">
+      <h1 className="text-xl font-bold md:text-2xl">{formatYmKorean(params.ym)}</h1>
       <MonthlySummary summary={summaryData} />
       <TransactionGroups
         transactions={rows}
@@ -108,7 +108,7 @@ export default async function MonthPage({
 function NoMonthYet({ ym }: { ym: string }) {
   return (
     <div className="mx-auto max-w-md py-20 text-center">
-      <h1 className="text-2xl font-bold">{formatYmKorean(ym)}</h1>
+      <h1 className="text-xl font-bold md:text-2xl">{formatYmKorean(ym)}</h1>
       <p className="mt-4 text-sm text-neutral-500">
         이 월은 아직 생성되지 않았습니다.
       </p>
