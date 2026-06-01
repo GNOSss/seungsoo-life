@@ -184,6 +184,7 @@ export function TransactionEditSheet({
       open={open}
       onOpenChange={(o) => !o && onClose()}
       dismissible={!pending}
+      modal={false}
     >
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 z-40 bg-black/40" />
