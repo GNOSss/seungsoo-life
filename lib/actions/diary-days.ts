@@ -102,29 +102,23 @@ export async function upsertRawInput(
   )
   if (dayErr) return { ok: false, error: dayErr.message }
 
-  // 5. 영향받는 날짜의 entries 삭제 (오늘 + 자정 넘김 시 어제도)
-  const affectedDates = Array.from(new Set(drafts.map((d) => d.date)))
-  if (affectedDates.length > 0) {
-    const { error: delErr } = await supabase
-      .from("diary_entries")
-      .delete()
-      .eq("user_id", user.id)
-      .in("date", affectedDates)
-    if (delErr) return { ok: false, error: delErr.message }
-  } else {
-    const { error: delErr } = await supabase
-      .from("diary_entries")
-      .delete()
-      .eq("user_id", user.id)
-      .eq("date", date)
-    if (delErr) return { ok: false, error: delErr.message }
-  }
+  // 5. 이 페이지(date)의 입력이 만들었던 entries만 삭제
+  //    owner_date=date 인 row들만 wipe → 다른 날의 자기 자신 입력 entries는 보존.
+  //    자정 넘김으로 어제 날짜에 INSERT됐던 split row도 owner_date=date라서 같이 wipe됨.
+  const { error: delErr } = await supabase
+    .from("diary_entries")
+    .delete()
+    .eq("user_id", user.id)
+    .eq("owner_date", date)
+  if (delErr) return { ok: false, error: delErr.message }
 
-  // 6. 새 entries INSERT
+  // 6. 새 entries INSERT (owner_date=date)
+  const affectedDates = Array.from(new Set(drafts.map((d) => d.date)))
   if (drafts.length > 0) {
     const rows = drafts.map((d: DiaryEntryDraft) => ({
       user_id: user.id,
       date: d.date,
+      owner_date: date,
       start_time: d.start_time,
       end_time: d.end_time,
       activity_name: d.activity_name,
