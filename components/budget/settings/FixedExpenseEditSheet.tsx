@@ -175,7 +175,10 @@ export function FixedExpenseEditSheet({
             {mode === "add" ? "고정지출 추가" : "고정지출 편집"}
           </Drawer.Title>
 
-          <div className="flex-1 space-y-3 overflow-y-auto px-4 py-3">
+          <div
+            className="flex-1 space-y-3 overflow-y-auto px-4 py-3"
+            data-vaul-no-drag
+          >
             <div>
               <label className="mb-1 block text-xs text-neutral-500">종류</label>
               <Select
@@ -189,8 +192,10 @@ export function FixedExpenseEditSheet({
                   })
                 }
               >
-                <SelectTrigger className="h-11 text-base">
-                  <SelectValue />
+                <SelectTrigger className="h-11 w-full text-base">
+                  <SelectValue>
+                    {(v) => (v === "income" ? "수입" : "출금")}
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="expense">출금</SelectItem>
@@ -249,7 +254,7 @@ export function FixedExpenseEditSheet({
                     setDraft({ ...draft, payment_method: v || null })
                   }
                 >
-                  <SelectTrigger className="h-11 text-base">
+                  <SelectTrigger className="h-11 w-full text-base">
                     <SelectValue placeholder="—" />
                   </SelectTrigger>
                   <SelectContent>
@@ -310,7 +315,10 @@ export function FixedExpenseEditSheet({
             </div>
           </div>
 
-          <div className="flex shrink-0 gap-2 border-t border-neutral-100 px-4 py-3">
+          <div
+            className="flex shrink-0 gap-2 border-t border-neutral-100 px-4 py-3"
+            data-vaul-no-drag
+          >
             <Button
               variant="outline"
               onClick={onClose}

@@ -48,7 +48,7 @@ export function CategoryDropdowns({
         }
         disabled={disabled}
       >
-        <SelectTrigger>
+        <SelectTrigger className="w-full">
           <SelectValue placeholder="1차" />
         </SelectTrigger>
         <SelectContent>
@@ -65,7 +65,7 @@ export function CategoryDropdowns({
         onValueChange={(v) => onChange({ category_2nd: v || null })}
         disabled={disabled || !selectedPrimary || secondaries.length === 0}
       >
-        <SelectTrigger>
+        <SelectTrigger className="w-full">
           <SelectValue
             placeholder={
               !selectedPrimary
