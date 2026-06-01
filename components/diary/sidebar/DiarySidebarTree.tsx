@@ -92,6 +92,28 @@ export function DiarySidebarTree({
             </ul>
           </div>
 
+          <div className="mb-6">
+            <h2 className="mb-2 px-2 text-xs font-semibold text-neutral-500">
+              📝 메모
+            </h2>
+            <ul className="space-y-0.5">
+              <li>
+                <Link
+                  href="/diary/notes"
+                  onClick={() => setMobileOpen(false)}
+                  className={cn(
+                    "block rounded px-2 py-1 text-sm transition-colors",
+                    pathname === "/diary/notes"
+                      ? "bg-neutral-100 font-bold text-neutral-900"
+                      : "text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900"
+                  )}
+                >
+                  ㆍ 할 것 / 하고 싶은 것
+                </Link>
+              </li>
+            </ul>
+          </div>
+
           <div className="mb-4">
             <h2 className="mb-2 px-2 text-xs font-semibold text-neutral-500">
               📔 일기 (주간)
