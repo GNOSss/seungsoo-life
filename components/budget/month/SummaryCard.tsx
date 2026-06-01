@@ -9,18 +9,28 @@ const krwFormatter = new Intl.NumberFormat("ko-KR", {
 export function SummaryCard({
   label,
   amount,
+  hero = false,
 }: {
   label: string
   amount: number
+  hero?: boolean
 }) {
   const isNegative = amount < 0
 
   return (
-    <div className="rounded border border-neutral-200 p-3">
-      <p className="text-xs text-neutral-500">{label}</p>
+    <div
+      className={cn(
+        "rounded border border-neutral-200",
+        hero ? "p-4" : "p-3"
+      )}
+    >
+      <p className={cn("text-neutral-500", hero ? "text-sm" : "text-xs")}>
+        {label}
+      </p>
       <p
         className={cn(
-          "mt-1 text-sm font-medium",
+          "mt-1 font-medium tabular-nums",
+          hero ? "text-lg font-semibold" : "text-sm",
           isNegative ? "text-red-600" : "text-neutral-900"
         )}
       >
