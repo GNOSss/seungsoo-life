@@ -1,6 +1,8 @@
 import { createClient } from "@/lib/supabase/server"
 import { FixedExpenseTable } from "@/components/budget/settings/FixedExpenseTable"
+import { FixedExpenseCardList } from "@/components/budget/settings/FixedExpenseCardList"
 import type { FixedExpenseRow } from "@/components/budget/settings/FixedExpenseRow"
+import type { CategoryOption } from "@/components/budget/settings/CategoryDropdowns"
 
 export default async function FixedExpensesPage() {
   const supabase = await createClient()
@@ -46,16 +48,34 @@ export default async function FixedExpensesPage() {
     active: r.active,
   }))
 
+  const cats: CategoryOption[] = (categories ?? []).map((c) => ({
+    id: c.id,
+    name: c.name,
+    type: c.type as "income" | "expense",
+    parent_id: c.parent_id,
+  }))
+
   return (
-    <FixedExpenseTable
-      rows={rows}
-      categories={(categories ?? []).map((c) => ({
-        id: c.id,
-        name: c.name,
-        type: c.type as "income" | "expense",
-        parent_id: c.parent_id,
-      }))}
-      paymentMethods={paymentMethods ?? []}
-    />
+    <div className="space-y-4 p-3 md:space-y-6 md:p-6">
+      <h1 className="text-xl font-bold md:text-2xl">고정지출 관리</h1>
+
+      {/* Mobile: 카드 스택 */}
+      <div className="md:hidden">
+        <FixedExpenseCardList
+          rows={rows}
+          categories={cats}
+          paymentMethods={paymentMethods ?? []}
+        />
+      </div>
+
+      {/* Desktop: 기존 테이블 */}
+      <div className="hidden md:block">
+        <FixedExpenseTable
+          rows={rows}
+          categories={cats}
+          paymentMethods={paymentMethods ?? []}
+        />
+      </div>
+    </div>
   )
 }
