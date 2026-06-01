@@ -16,14 +16,32 @@ export default async function DiaryNotesPage() {
     byKind[r.kind as DiaryNoteKind] = r.content
   }
 
-  const TODO_PLACEHOLDER = `## 이번 주\n- [ ] 보고서 작성\n- [x] 운동 1시간\n\n## 다음 주\n- [ ] 거실 정리`
-  const WISH_PLACEHOLDER = `## 여행\n- 제주도 (가족)\n- 후쿠오카\n\n## 사고 싶은 것\n- 새 키보드\n- 모니터 암\n\n## 배우고 싶은 것\n- 중국어 회화`
+  const TODO_PLACEHOLDER = `## 이번 주
+- [ ] 보고서 작성 — 참고: [회사 위키](https://wiki.example.com/report)
+- [x] 운동 1시간
+
+## 다음 주
+- [ ] 거실 정리
+- [ ] 청약 통장 확인 ([홈텍스](https://www.hometax.go.kr))`
+
+  const WISH_PLACEHOLDER = `## 여행
+- 제주도 (가족) — [숙소 검색](https://www.airbnb.co.kr)
+- 후쿠오카
+
+## 사고 싶은 것
+- 새 키보드 — [HHKB](https://happyhackingkb.com)
+- 모니터 암
+
+## 배우고 싶은 것
+- 중국어 회화 — [듀오링고](https://www.duolingo.com)`
 
   return (
     <div className="space-y-4 p-3 md:space-y-6 md:p-6">
       <h1 className="text-xl font-bold md:text-2xl">📝 할 것 / 하고 싶은 것</h1>
       <p className="text-xs text-neutral-500">
-        마크다운 지원 — `##` 제목, `- [ ]` 체크박스, `- ` 리스트, `**굵게**`, `*기울임*`, 표 등.
+        마크다운 지원 — <code>##</code> 제목, <code>- [ ]</code> 체크박스,{" "}
+        <code>-</code> 리스트, <code>**굵게**</code>, <code>*기울임*</code>,{" "}
+        <code>[텍스트](https://...)</code> 링크, 표 등.
       </p>
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         <NoteCard
