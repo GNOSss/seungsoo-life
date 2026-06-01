@@ -78,7 +78,7 @@ export function ActivityRowComponent({
         onBlur={persist}
         disabled={pending}
         className="rounded border border-neutral-300 px-2 py-1 text-sm"
-        placeholder="활동명"
+        placeholder="키워드 (콤마로 구분, 예: 잠,화장실,샤워)"
       />
       <input
         type="text"

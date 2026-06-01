@@ -12,6 +12,7 @@ import {
   type DeleteDiaryActivityInput,
   type UpsertActivityColorByNameInput,
 } from "@/lib/validators/diary"
+import { findMatchingLib, parseKeywords } from "@/lib/utils/diary-color-match"
 
 type Result = { ok: true } | { ok: false; error: string }
 
@@ -126,45 +127,53 @@ export async function upsertActivityColorByName(
   if (!ctx.ok) return { ok: false, error: ctx.error }
   const { supabase, user } = ctx
 
-  const { data: existing } = await supabase
+  // 1. 키워드 매칭으로 라이브러리 행 찾기 (name = 콤마 구분 키워드 리스트)
+  const { data: allLibs } = await supabase
     .from("diary_activities")
-    .select("id, sort_order")
+    .select("id, name, color, sort_order")
     .eq("user_id", user.id)
-    .eq("name", parsed.data.name)
-    .maybeSingle()
+    .order("sort_order", { ascending: true })
+  const libs = allLibs ?? []
+  const matched = findMatchingLib(parsed.data.name, libs)
 
-  if (existing) {
+  // 2. UPDATE existing or INSERT new
+  let affectedKeywords: string[]
+  if (matched) {
     const { error } = await supabase
       .from("diary_activities")
       .update({ color: parsed.data.color })
-      .eq("id", existing.id)
+      .eq("id", matched.id)
     if (error) return { ok: false, error: error.message }
+    affectedKeywords = parseKeywords(matched.name)
   } else {
-    const { data: maxRow } = await supabase
-      .from("diary_activities")
-      .select("sort_order")
-      .eq("user_id", user.id)
-      .order("sort_order", { ascending: false })
-      .limit(1)
-      .maybeSingle()
-    const nextSort = (maxRow?.sort_order ?? 0) + 1
+    const maxSort = libs.length > 0 ? libs[libs.length - 1].sort_order : 0
     const { error } = await supabase.from("diary_activities").insert({
       user_id: user.id,
       name: parsed.data.name,
       color: parsed.data.color,
-      sort_order: nextSort,
+      sort_order: maxSort + 1,
     })
     if (error) return { ok: false, error: error.message }
+    affectedKeywords = parseKeywords(parsed.data.name)
   }
 
-  if (input.date) {
-    const { error } = await supabase
+  // 3. 해당 날짜의 entries 중 affected keywords 중 하나라도 포함하는 활동명의 색 갱신
+  if (input.date && affectedKeywords.length > 0) {
+    const { data: entries } = await supabase
       .from("diary_entries")
-      .update({ color: parsed.data.color })
+      .select("id, activity_name")
       .eq("user_id", user.id)
       .eq("date", input.date)
-      .eq("activity_name", parsed.data.name)
-    if (error) return { ok: false, error: error.message }
+    const matchingIds = (entries ?? [])
+      .filter((e) => affectedKeywords.some((kw) => e.activity_name.includes(kw)))
+      .map((e) => e.id)
+    if (matchingIds.length > 0) {
+      const { error } = await supabase
+        .from("diary_entries")
+        .update({ color: parsed.data.color })
+        .in("id", matchingIds)
+      if (error) return { ok: false, error: error.message }
+    }
     revalidatePath(`/diary/${input.date}`)
   }
   revalidatePath("/diary/settings/activities")

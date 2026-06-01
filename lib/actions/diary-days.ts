@@ -10,6 +10,10 @@ import {
 } from "@/lib/validators/diary"
 import { parseAllLines, type DiaryEntryDraft } from "@/lib/utils/diary-parse"
 import { getPrevDate } from "@/lib/utils/diary-date"
+import {
+  findColorByKeywords,
+  DEFAULT_COLOR,
+} from "@/lib/utils/diary-color-match"
 
 type Result =
   | { ok: true; failed: { line: string; error: string }[] }
@@ -71,18 +75,18 @@ export async function upsertRawInput(
     lastPrev?.end_time ?? null
   )
 
-  // 3. 활동명 → 색 조회 (라이브러리)
-  const uniqueNames = Array.from(new Set(drafts.map((d) => d.activity_name)))
+  // 3. 활동명 → 색 (라이브러리 키워드 매칭)
+  //    name 필드는 콤마 구분 키워드 리스트로 취급. 활동명이 키워드 중 하나라도
+  //    포함하면 매칭. sort_order 오름차순 첫 매칭 우선.
+  const { data: libs } = await supabase
+    .from("diary_activities")
+    .select("name, color")
+    .eq("user_id", user.id)
+    .order("sort_order", { ascending: true })
+  const libRows = libs ?? []
   const colorByName = new Map<string, string>()
-  if (uniqueNames.length > 0) {
-    const { data: libs } = await supabase
-      .from("diary_activities")
-      .select("name, color")
-      .eq("user_id", user.id)
-      .in("name", uniqueNames)
-    for (const r of libs ?? []) {
-      colorByName.set(r.name, r.color)
-    }
+  for (const name of new Set(drafts.map((d) => d.activity_name))) {
+    colorByName.set(name, findColorByKeywords(name, libRows))
   }
 
   // 4. diary_days upsert (raw_input 보존)
@@ -123,7 +127,7 @@ export async function upsertRawInput(
       start_time: d.start_time,
       end_time: d.end_time,
       activity_name: d.activity_name,
-      color: colorByName.get(d.activity_name) ?? "#D8D8D8",
+      color: colorByName.get(d.activity_name) ?? DEFAULT_COLOR,
       raw_input: d.raw_input,
     }))
     const { error: insErr } = await supabase.from("diary_entries").insert(rows)
