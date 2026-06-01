@@ -99,9 +99,7 @@ export function TransactionCardMobile({
         onClick={onTap}
         className="absolute inset-0 rounded"
         aria-label="거래 편집"
-      >
-        <span className="sr-only">편집</span>
-      </button>
+      />
     </div>
   )
 }
