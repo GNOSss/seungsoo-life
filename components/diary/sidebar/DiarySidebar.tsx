@@ -33,9 +33,9 @@ export async function DiarySidebar() {
   for (const r of rows ?? []) {
     mondaySet.add(getMondayOf(r.date))
   }
-  // year > month(=월요일의 월) > [mondays] 그룹화
+  // year > month(=월요일의 월) > [mondays] 그룹화. 월·주는 오름차순.
   const yearMap = new Map<number, Map<number, string[]>>()
-  for (const monday of Array.from(mondaySet).sort().reverse()) {
+  for (const monday of Array.from(mondaySet).sort()) {
     const { year, month } = parseDate(monday)
     let mm = yearMap.get(year)
     if (!mm) {
@@ -47,11 +47,11 @@ export async function DiarySidebar() {
     mm.set(month, arr)
   }
   const yearGroups: YearGroup[] = Array.from(yearMap.entries())
-    .sort((a, b) => b[0] - a[0])
+    .sort((a, b) => b[0] - a[0]) // year 내림차순 유지 (최근 연도 위)
     .map(([year, monthsMap]) => ({
       year,
       months: Array.from(monthsMap.entries())
-        .sort((a, b) => b[0] - a[0])
+        .sort((a, b) => a[0] - b[0]) // 월 오름차순 (1월, 2월, ...)
         .map(([month, mondays]): MonthGroup => ({ month, mondays })),
     }))
 
