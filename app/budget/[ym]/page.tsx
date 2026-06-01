@@ -7,6 +7,10 @@ import {
   type MonthlySummaryData,
 } from "@/components/budget/month/MonthlySummary"
 import { TransactionGroups } from "@/components/budget/month/TransactionGroups"
+import {
+  ExpenseByCategoryChart,
+  type CategoryDatum,
+} from "@/components/budget/month/ExpenseByCategoryChart"
 import type { TransactionRowData } from "@/components/budget/month/TransactionRow"
 import type { CategoryOption } from "@/components/budget/settings/CategoryDropdowns"
 
@@ -91,9 +95,25 @@ export default async function MonthPage({
     parent_id: c.parent_id,
   }))
 
+  // 1차 카테고리별 출금 집계 (도넛 차트용)
+  const expenseByCat = new Map<string, number>()
+  for (const t of rows) {
+    if (t.type === "expense") {
+      expenseByCat.set(
+        t.category_1st,
+        (expenseByCat.get(t.category_1st) ?? 0) + t.amount
+      )
+    }
+  }
+  const chartData: CategoryDatum[] = Array.from(
+    expenseByCat,
+    ([category, amount]) => ({ category, amount })
+  ).sort((a, b) => b.amount - a.amount)
+
   return (
     <div className="space-y-4 p-3 md:space-y-6 md:p-6">
       <h1 className="text-xl font-bold md:text-2xl">{formatYmKorean(params.ym)}</h1>
+      <ExpenseByCategoryChart data={chartData} />
       <MonthlySummary summary={summaryData} />
       <TransactionGroups
         transactions={rows}
