@@ -7,8 +7,7 @@ import {
 } from "@/lib/utils/diary-date"
 import { QuestCheckRow } from "@/components/diary/day/QuestCheckRow"
 import { EntryInput } from "@/components/diary/day/EntryInput"
-import { Timeline } from "@/components/diary/day/Timeline"
-import type { TimelineEntry } from "@/components/diary/day/TimelineSlot"
+import { Timeline, type TimelineEntry } from "@/components/diary/day/Timeline"
 
 export default async function DiaryDatePage({
   params,
