@@ -15,7 +15,7 @@ export default async function DiaryActivitiesPage() {
     <div className="rounded border border-neutral-200">
       <div className="grid grid-cols-[60px_1fr_100px_40px] gap-2 border-b border-neutral-200 bg-neutral-50 px-3 py-2 text-xs font-medium text-neutral-500">
         <span>색</span>
-        <span>활동명</span>
+        <span>키워드 (콤마 구분)</span>
         <span>HEX</span>
         <span />
       </div>

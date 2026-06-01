@@ -85,7 +85,8 @@ export async function upsertRawInput(
     .order("sort_order", { ascending: true })
   const libRows = libs ?? []
   const colorByName = new Map<string, string>()
-  for (const name of new Set(drafts.map((d) => d.activity_name))) {
+  const uniqueNames = Array.from(new Set(drafts.map((d) => d.activity_name)))
+  for (const name of uniqueNames) {
     colorByName.set(name, findColorByKeywords(name, libRows))
   }
 
