@@ -73,8 +73,8 @@ export function TransactionGroups({
         />
       </div>
 
-      {/* Desktop: 기존 8col 테이블 그대로 */}
-      <div className="hidden gap-4 md:grid xl:grid-cols-2">
+      {/* Desktop: 기존 8col 테이블 그대로. 출금/입금 세로 스택 기본, 2xl(1536+)에서만 2열. */}
+      <div className="hidden gap-4 md:grid 2xl:grid-cols-2">
         <TransactionTable
           type="expense"
           transactions={expense}
