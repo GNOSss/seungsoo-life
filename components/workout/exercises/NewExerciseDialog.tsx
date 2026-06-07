@@ -17,12 +17,18 @@ const CATEGORIES: Category[] = ["Barbell","Dumbbell","Machine","Cable","Bodyweig
 
 export function NewExerciseDialog({
   trigger,
+  open: controlledOpen,
+  onOpenChange: controlledOnOpenChange,
   onCreated,
 }: {
-  trigger: React.ReactNode
+  trigger?: React.ReactNode
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
   onCreated?: (id: string) => void
 }) {
-  const [open, setOpen] = useState(false)
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(false)
+  const open = controlledOpen ?? uncontrolledOpen
+  const setOpen = controlledOnOpenChange ?? setUncontrolledOpen
   const [name, setName] = useState("")
   const [bodyPart, setBodyPart] = useState<BodyPart | "">("")
   const [category, setCategory] = useState<Category | "">("")
@@ -48,7 +54,9 @@ export function NewExerciseDialog({
 
   return (
     <>
-      <span onClick={() => setOpen(true)} style={{ display: "contents" }}>{trigger}</span>
+      {trigger ? (
+        <span onClick={() => setOpen(true)} style={{ display: "contents" }}>{trigger}</span>
+      ) : null}
       <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent showCloseButton={false}>
         <DialogHeader>
