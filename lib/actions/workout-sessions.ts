@@ -148,15 +148,41 @@ export async function removeExerciseFromSession(session_exercise_id: string, ses
   return { ok: true }
 }
 
-export async function finishSession(session_id: string): Promise<Result> {
+/** 완료. completed=true 세트가 0개면 빈 세션으로 간주하고 삭제 후 discarded 반환. */
+export async function finishSession(
+  session_id: string
+): Promise<Result<{ discarded: boolean }>> {
   const supabase = await createClient()
+
+  // completed 세트 수 확인
+  const { count } = await supabase
+    .from("workout_sets")
+    .select("id", { count: "exact", head: true })
+    .eq("completed", true)
+    .in(
+      "session_exercise_id",
+      (
+        await supabase
+          .from("workout_session_exercises")
+          .select("id")
+          .eq("session_id", session_id)
+      ).data?.map((r) => r.id) ?? []
+    )
+
+  // 완료된 세트 없으면 빈 세션 — 삭제
+  if ((count ?? 0) === 0) {
+    await supabase.from("workout_sessions").delete().eq("id", session_id)
+    revalidatePath("/workout/start")
+    return { ok: true, data: { discarded: true } }
+  }
+
   const { error } = await supabase
     .from("workout_sessions")
     .update({ ended_at: new Date().toISOString() })
     .eq("id", session_id)
   if (error) return { ok: false, error: error.message }
   revalidatePath(`/workout/session/${session_id}`)
-  return { ok: true }
+  return { ok: true, data: { discarded: false } }
 }
 
 export async function deleteSession(session_id: string): Promise<Result> {

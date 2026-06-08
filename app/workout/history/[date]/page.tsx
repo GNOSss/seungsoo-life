@@ -1,7 +1,6 @@
-import Link from "next/link"
 import { createClient } from "@/lib/supabase/server"
 import { notFound } from "next/navigation"
-import { formatDuration, formatWeight } from "@/lib/utils/workout-format"
+import { SessionCard } from "@/components/workout/history/SessionCard"
 
 export default async function HistoryDatePage({
   params,
@@ -42,54 +41,22 @@ export default async function HistoryDatePage({
     <div className="mx-auto max-w-2xl space-y-3 p-4 md:p-6">
       <h1 className="text-xl font-bold md:text-2xl">📅 {date}</h1>
       <p className="text-xs text-neutral-500">{sessions.length}개 세션</p>
-
       <ul className="space-y-2">
-        {sessions.map((s) => {
-          const finished = s.ended_at != null
-          const href = finished
-            ? `/workout/session/${s.id}/complete`
-            : `/workout/session/${s.id}`
-          return (
-            <li key={s.id}>
-              <Link
-                href={href}
-                className="block rounded border border-neutral-200 bg-white p-3 transition-colors hover:bg-neutral-50"
-              >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="text-sm font-semibold">
-                      {s.routine_name ?? "빈 워크아웃"}
-                    </div>
-                    {s.folder_name && (
-                      <div className="text-xs text-neutral-400">{s.folder_name}</div>
-                    )}
-                  </div>
-                  {!finished && (
-                    <span className="rounded bg-amber-100 px-2 py-0.5 text-[10px] font-semibold text-amber-700">
-                      진행 중
-                    </span>
-                  )}
-                </div>
-                {finished && (
-                  <div className="mt-2 grid grid-cols-3 gap-2 text-center text-xs text-neutral-600">
-                    <div>
-                      <div className="text-[10px] text-neutral-400">⏱</div>
-                      <div>{formatDuration(s.duration_minutes)}</div>
-                    </div>
-                    <div>
-                      <div className="text-[10px] text-neutral-400">🏋️</div>
-                      <div>{formatWeight(Number(s.total_weight_kg))}</div>
-                    </div>
-                    <div>
-                      <div className="text-[10px] text-neutral-400">🏆</div>
-                      <div>{s.pr_count} PR</div>
-                    </div>
-                  </div>
-                )}
-              </Link>
-            </li>
-          )
-        })}
+        {sessions.map((s) => (
+          <SessionCard
+            key={s.id}
+            date={date}
+            session={{
+              id: s.id,
+              routine_name: s.routine_name,
+              folder_name: s.folder_name,
+              ended_at: s.ended_at,
+              duration_minutes: s.duration_minutes,
+              total_weight_kg: Number(s.total_weight_kg),
+              pr_count: s.pr_count,
+            }}
+          />
+        ))}
       </ul>
     </div>
   )
