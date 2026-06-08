@@ -22,6 +22,7 @@ export type SortableTransaction = {
   category_2nd: string | null
   amount: number
   is_fixed: boolean
+  created_at: string
 }
 
 export type SortMode = "alpha" | "amount"
@@ -46,8 +47,8 @@ export function sortTransactionsInGroup<T extends SortableTransaction>(
         return a.date.localeCompare(b.date)
       }
 
-      // 2-b. 비고정 그룹: 날짜만
-      return a.date.localeCompare(b.date)
+      // 2-b. 비고정 그룹: 입력 순서(created_at)
+      return a.created_at.localeCompare(b.created_at)
     })
   }
 
@@ -74,7 +75,7 @@ export function sortTransactionsInGroup<T extends SortableTransaction>(
       if (c1 !== 0) return c1
       const c2 = koCollator.compare(a.category_2nd ?? "", b.category_2nd ?? "")
       if (c2 !== 0) return c2
-      return a.date.localeCompare(b.date)
+      return a.created_at.localeCompare(b.created_at)
     }
   }
 

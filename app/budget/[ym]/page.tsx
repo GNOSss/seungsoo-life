@@ -40,7 +40,7 @@ export default async function MonthPage({
     supabase
       .from("transactions")
       .select(
-        "id, year_month, date, type, category_1st, category_2nd, payment_method, description, amount, is_paid, is_fixed"
+        "id, year_month, date, type, category_1st, category_2nd, payment_method, description, amount, is_paid, is_fixed, created_at"
       )
       .eq("year_month", params.ym),
     supabase
@@ -97,6 +97,7 @@ export default async function MonthPage({
     amount: Number(t.amount),
     is_paid: t.is_paid,
     is_fixed: t.is_fixed,
+    created_at: t.created_at ?? "",
   }))
 
   const cats: CategoryOption[] = (categories ?? []).map((c) => ({

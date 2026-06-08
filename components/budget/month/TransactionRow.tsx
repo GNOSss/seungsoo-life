@@ -35,6 +35,7 @@ export type TransactionRowData = {
   amount: number
   is_paid: boolean
   is_fixed: boolean
+  created_at: string
 }
 
 export function TransactionRowComponent({
