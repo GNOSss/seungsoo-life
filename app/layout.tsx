@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next"
 import { Inter } from "next/font/google"
 import { GlobalHeader } from "@/components/common/GlobalHeader"
 import { Toaster } from "@/components/ui/sonner"
-import { createClient } from "@/lib/supabase/server"
+import { headers } from "next/headers"
 import "./globals.css"
 
 const inter = Inter({ subsets: ["latin"] })
@@ -29,15 +29,14 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  // middleware가 x-user-email 헤더로 user 정보 전달 — DB 재호출 불필요
+  const headersList = await headers()
+  const email = headersList.get("x-user-email") ?? ""
 
   return (
     <html lang="ko">
       <body className={inter.className}>
-        <GlobalHeader user={user ? { email: user.email ?? "" } : null} />
+        <GlobalHeader user={email ? { email } : null} />
         <main>{children}</main>
         <Toaster />
       </body>
