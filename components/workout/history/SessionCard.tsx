@@ -18,10 +18,9 @@ export type SessionCardData = {
 
 export function SessionCard({
   session,
-  date,
 }: {
   session: SessionCardData
-  date: string
+  date?: string
 }) {
   const router = useRouter()
   const [pending, start] = useTransition()
