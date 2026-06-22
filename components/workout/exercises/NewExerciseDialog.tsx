@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils"
 import type { BodyPart, Category } from "@/lib/validators/workout"
 
 const BODY_PARTS: BodyPart[] = ["Arms","Back","Cardio","Chest","Core","Full Body","Legs","Olympic","Other","Shoulders"]
-const CATEGORIES: Category[] = ["Barbell","Dumbbell","Machine","Cable","Bodyweight","Assisted Bodyweight","Reps Only","Cardio","Duration","Other"]
+const CATEGORIES: Category[] = ["Barbell","Dumbbell","Machine","Smith Machine","Cable","Bodyweight","Assisted Bodyweight","Reps Only","Cardio","Duration","Other"]
 
 export function NewExerciseDialog({
   trigger,

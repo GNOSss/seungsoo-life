@@ -4,7 +4,7 @@ export const BodyPartEnum = z.enum([
   "Arms","Back","Cardio","Chest","Core","Full Body","Legs","Olympic","Other","Shoulders",
 ])
 export const CategoryEnum = z.enum([
-  "Barbell","Dumbbell","Machine","Cable","Bodyweight","Assisted Bodyweight","Reps Only","Cardio","Duration","Other",
+  "Barbell","Dumbbell","Machine","Smith Machine","Cable","Bodyweight","Assisted Bodyweight","Reps Only","Cardio","Duration","Other",
 ])
 export const SetTypeEnum = z.enum(["warmup", "working", "failure"])
 
