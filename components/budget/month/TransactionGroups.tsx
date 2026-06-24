@@ -41,6 +41,18 @@ export function TransactionGroups({
         </button>
         <button
           type="button"
+          onClick={() => setSortMode("category")}
+          className={cn(
+            "rounded-full px-3 py-1 font-medium transition-colors",
+            sortMode === "category"
+              ? "bg-neutral-900 text-white"
+              : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200"
+          )}
+        >
+          1차 카테고리
+        </button>
+        <button
+          type="button"
           onClick={() => setSortMode("amount")}
           className={cn(
             "rounded-full px-3 py-1 font-medium transition-colors",
