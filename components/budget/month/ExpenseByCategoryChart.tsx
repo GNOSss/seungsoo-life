@@ -4,16 +4,16 @@ import { useState, useRef, useCallback } from "react"
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts"
 
 const COLORS = [
-  "#10b981", // emerald
-  "#3b82f6", // blue
-  "#f59e0b", // amber
-  "#ef4444", // red
-  "#8b5cf6", // violet
-  "#06b6d4", // cyan
-  "#ec4899", // pink
-  "#84cc16", // lime
-  "#f97316", // orange
-  "#14b8a6", // teal
+  "#10b981",
+  "#3b82f6",
+  "#f59e0b",
+  "#ef4444",
+  "#8b5cf6",
+  "#06b6d4",
+  "#ec4899",
+  "#84cc16",
+  "#f97316",
+  "#14b8a6",
 ]
 
 const krwFormatter = new Intl.NumberFormat("ko-KR", {
@@ -28,7 +28,7 @@ export type CategoryDatum = {
   subcategories?: { category: string; amount: number }[]
 }
 
-function SubcategoryBubble({
+function BubbleContent({
   data,
   total,
   color,
@@ -38,55 +38,67 @@ function SubcategoryBubble({
   color: string
 }) {
   return (
+    <div className="rounded-lg border border-neutral-200 bg-neutral-50 p-2.5 shadow-lg">
+      <div className="mb-1.5 text-[10px] font-semibold" style={{ color }}>
+        2차 카테고리
+      </div>
+      <ul className="space-y-1">
+        {data.map((d) => (
+          <li key={d.category} className="flex items-center justify-between gap-3 text-xs">
+            <span className="truncate text-neutral-700">{d.category}</span>
+            <span className="shrink-0 tabular-nums text-neutral-500">
+              {((d.amount / total) * 100).toFixed(0)}%&nbsp;·&nbsp;{krwFormatter.format(d.amount)}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
+function SubcategoryBubble({
+  data,
+  total,
+  color,
+  mobileDir,
+}: {
+  data: { category: string; amount: number }[]
+  total: number
+  color: string
+  mobileDir: "above" | "below"
+}) {
+  return (
     <>
-      {/* 모바일: 항목 아래에 표시 */}
-      <div className="absolute left-0 top-full z-50 mt-1 w-full md:hidden">
-        {/* 말풍선 위쪽 꼬리 */}
-        <div
-          className="ml-3 border-x-[6px] border-b-[7px] border-x-transparent"
-          style={{ borderBottomColor: "#f5f5f5" }}
-        />
-        <div className="rounded-lg border border-neutral-200 bg-neutral-50 p-2.5 shadow-lg">
-          <div className="mb-1.5 text-[10px] font-semibold" style={{ color }}>
-            2차 카테고리
-          </div>
-          <ul className="space-y-1">
-            {data.map((d) => (
-              <li key={d.category} className="flex items-center justify-between gap-3 text-xs">
-                <span className="truncate text-neutral-700">{d.category}</span>
-                <span className="shrink-0 tabular-nums text-neutral-500">
-                  {((d.amount / total) * 100).toFixed(0)}%&nbsp;·&nbsp;{krwFormatter.format(d.amount)}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
+      {/* 모바일: 위/아래 동적 방향 */}
+      <div
+        className={`absolute left-0 z-50 w-full md:hidden ${
+          mobileDir === "below" ? "top-full mt-1" : "bottom-full mb-1"
+        }`}
+      >
+        {mobileDir === "below" ? (
+          /* 위쪽 꼬리 (bubble이 아래에 있을 때) */
+          <div
+            className="ml-3 border-x-[6px] border-b-[7px] border-x-transparent"
+            style={{ borderBottomColor: "#f5f5f5" }}
+          />
+        ) : (
+          /* 아래쪽 꼬리 (bubble이 위에 있을 때) */
+          <div
+            className="ml-3 border-x-[6px] border-t-[7px] border-x-transparent"
+            style={{ borderTopColor: "#f5f5f5" }}
+          />
+        )}
+        <BubbleContent data={data} total={total} color={color} />
       </div>
 
-      {/* PC: 항목 오른쪽에 표시 */}
+      {/* PC: 오른쪽 고정 */}
       <div className="absolute left-full top-1/2 z-50 ml-2 hidden -translate-y-1/2 md:block">
-        {/* 말풍선 왼쪽 꼬리 */}
         <div
           className="absolute left-0 top-1/2 -translate-x-full -translate-y-1/2 border-y-[6px] border-r-[7px] border-y-transparent"
           style={{ borderRightColor: "#f5f5f5" }}
         />
-        <div className="min-w-[160px] rounded-lg border border-neutral-200 bg-neutral-50 p-2.5 shadow-lg">
-        <div
-          className="mb-1.5 text-[10px] font-semibold"
-          style={{ color }}
-        >
-          2차 카테고리
-        </div>
-        <ul className="space-y-1">
-          {data.map((d) => (
-            <li key={d.category} className="flex items-center justify-between gap-3 text-xs">
-              <span className="truncate text-neutral-700">{d.category}</span>
-              <span className="shrink-0 tabular-nums text-neutral-500">
-                {((d.amount / total) * 100).toFixed(0)}%&nbsp;·&nbsp;{krwFormatter.format(d.amount)}
-              </span>
-            </li>
-          ))}
-        </ul>
+        <div className="min-w-[160px]">
+          <BubbleContent data={data} total={total} color={color} />
         </div>
       </div>
     </>
@@ -96,6 +108,7 @@ function SubcategoryBubble({
 export function ExpenseByCategoryChart({ data }: { data: CategoryDatum[] }) {
   const total = data.reduce((sum, d) => sum + d.amount, 0)
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
+  const [mobileDir, setMobileDir] = useState<"above" | "below">("below")
   const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const show = useCallback((i: number) => {
@@ -107,9 +120,22 @@ export function ExpenseByCategoryChart({ data }: { data: CategoryDatum[] }) {
     hideTimer.current = setTimeout(() => setActiveIndex(null), 120)
   }, [])
 
-  const toggle = useCallback((i: number) => {
-    setActiveIndex((prev) => (prev === i ? null : i))
-  }, [])
+  const handleTouch = useCallback(
+    (e: React.TouchEvent<HTMLLIElement>, i: number, subLen: number) => {
+      e.preventDefault()
+      if (activeIndex === i) {
+        setActiveIndex(null)
+        return
+      }
+      // 항목 아래 남은 공간 추정: 행 ~24px + 헤더 20px + 패딩 20px
+      const estimatedBubbleH = subLen * 24 + 40
+      const rect = e.currentTarget.getBoundingClientRect()
+      const spaceBelow = window.innerHeight - rect.bottom
+      setMobileDir(spaceBelow >= estimatedBubbleH ? "below" : "above")
+      setActiveIndex(i)
+    },
+    [activeIndex]
+  )
 
   if (total === 0) {
     return (
@@ -166,14 +192,11 @@ export function ExpenseByCategoryChart({ data }: { data: CategoryDatum[] }) {
               <li
                 key={d.category}
                 className="relative flex cursor-default items-center justify-between gap-2 rounded px-1 py-0.5 transition-colors hover:bg-neutral-100"
-                /* PC: 마우스 호버 */
                 onMouseEnter={() => hasSub && show(i)}
                 onMouseLeave={() => hasSub && hide()}
-                /* 모바일: 터치 토글 */
                 onTouchEnd={(e) => {
                   if (!hasSub) return
-                  e.preventDefault()
-                  toggle(i)
+                  handleTouch(e, i, d.subcategories!.length)
                 }}
               >
                 <div className="flex min-w-0 items-center gap-2">
@@ -195,6 +218,7 @@ export function ExpenseByCategoryChart({ data }: { data: CategoryDatum[] }) {
                     data={d.subcategories!}
                     total={d.amount}
                     color={color}
+                    mobileDir={mobileDir}
                   />
                 )}
               </li>
