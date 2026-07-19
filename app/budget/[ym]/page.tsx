@@ -107,19 +107,28 @@ export default async function MonthPage({
     parent_id: c.parent_id,
   }))
 
-  // 1차 카테고리별 출금 집계 (도넛 차트용)
+  // 1차 카테고리별 출금 집계 (도넛 차트용) + 2차 카테고리 세부 내역
   const expenseByCat = new Map<string, number>()
+  const expenseByCat2nd = new Map<string, Map<string, number>>()
   for (const t of rows) {
     if (t.type === "expense") {
-      expenseByCat.set(
-        t.category_1st,
-        (expenseByCat.get(t.category_1st) ?? 0) + t.amount
-      )
+      expenseByCat.set(t.category_1st, (expenseByCat.get(t.category_1st) ?? 0) + t.amount)
+      const sub2nd = expenseByCat2nd.get(t.category_1st) ?? new Map<string, number>()
+      const key = t.category_2nd ?? "(없음)"
+      sub2nd.set(key, (sub2nd.get(key) ?? 0) + t.amount)
+      expenseByCat2nd.set(t.category_1st, sub2nd)
     }
   }
   const chartData: CategoryDatum[] = Array.from(
     expenseByCat,
-    ([category, amount]) => ({ category, amount })
+    ([category, amount]) => ({
+      category,
+      amount,
+      subcategories: Array.from(
+        expenseByCat2nd.get(category) ?? [],
+        ([cat, amt]) => ({ category: cat, amount: amt })
+      ).sort((a, b) => b.amount - a.amount),
+    })
   ).sort((a, b) => b.amount - a.amount)
 
   // 최근 6개월 입금/출금 추이 (없는 월은 0으로 보정)

@@ -1,5 +1,6 @@
 "use client"
 
+import { useState, useRef, useCallback } from "react"
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts"
 
 const COLORS = [
@@ -21,10 +22,67 @@ const krwFormatter = new Intl.NumberFormat("ko-KR", {
   maximumFractionDigits: 0,
 })
 
-export type CategoryDatum = { category: string; amount: number }
+export type CategoryDatum = {
+  category: string
+  amount: number
+  subcategories?: { category: string; amount: number }[]
+}
+
+function SubcategoryBubble({
+  data,
+  total,
+  color,
+}: {
+  data: { category: string; amount: number }[]
+  total: number
+  color: string
+}) {
+  return (
+    <div className="absolute left-full top-1/2 z-50 ml-2 -translate-y-1/2">
+      {/* 말풍선 왼쪽 꼬리 */}
+      <div
+        className="absolute left-0 top-1/2 -translate-x-full -translate-y-1/2 border-y-[6px] border-r-[7px] border-y-transparent"
+        style={{ borderRightColor: "#f5f5f5" }}
+      />
+      <div className="min-w-[160px] rounded-lg border border-neutral-200 bg-neutral-50 p-2.5 shadow-lg">
+        <div
+          className="mb-1.5 text-[10px] font-semibold"
+          style={{ color }}
+        >
+          2차 카테고리
+        </div>
+        <ul className="space-y-1">
+          {data.map((d) => (
+            <li key={d.category} className="flex items-center justify-between gap-3 text-xs">
+              <span className="truncate text-neutral-700">{d.category}</span>
+              <span className="shrink-0 tabular-nums text-neutral-500">
+                {((d.amount / total) * 100).toFixed(0)}%&nbsp;·&nbsp;{krwFormatter.format(d.amount)}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  )
+}
 
 export function ExpenseByCategoryChart({ data }: { data: CategoryDatum[] }) {
   const total = data.reduce((sum, d) => sum + d.amount, 0)
+  const [activeIndex, setActiveIndex] = useState<number | null>(null)
+  const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const show = useCallback((i: number) => {
+    if (hideTimer.current) clearTimeout(hideTimer.current)
+    setActiveIndex(i)
+  }, [])
+
+  const hide = useCallback(() => {
+    hideTimer.current = setTimeout(() => setActiveIndex(null), 120)
+  }, [])
+
+  const toggle = useCallback((i: number) => {
+    setActiveIndex((prev) => (prev === i ? null : i))
+  }, [])
 
   if (total === 0) {
     return (
@@ -73,21 +131,45 @@ export function ExpenseByCategoryChart({ data }: { data: CategoryDatum[] }) {
         <ul className="space-y-1 text-sm md:flex-1">
           {data.map((d, i) => {
             const pct = (d.amount / total) * 100
+            const hasSub = (d.subcategories?.length ?? 0) > 0
+            const isActive = activeIndex === i
+            const color = COLORS[i % COLORS.length]
+
             return (
               <li
                 key={d.category}
-                className="flex items-center justify-between gap-2"
+                className="relative flex cursor-default items-center justify-between gap-2 rounded px-1 py-0.5 transition-colors hover:bg-neutral-100"
+                /* PC: 마우스 호버 */
+                onMouseEnter={() => hasSub && show(i)}
+                onMouseLeave={() => hasSub && hide()}
+                /* 모바일: 터치 토글 */
+                onTouchEnd={(e) => {
+                  if (!hasSub) return
+                  e.preventDefault()
+                  toggle(i)
+                }}
               >
                 <div className="flex min-w-0 items-center gap-2">
                   <span
                     className="size-3 shrink-0 rounded-sm"
-                    style={{ backgroundColor: COLORS[i % COLORS.length] }}
+                    style={{ backgroundColor: color }}
                   />
                   <span className="truncate">{d.category}</span>
+                  {hasSub && (
+                    <span className="text-[10px] text-neutral-400">▸</span>
+                  )}
                 </div>
                 <span className="shrink-0 text-neutral-500 tabular-nums">
                   {pct.toFixed(1)}% · {krwFormatter.format(d.amount)}
                 </span>
+
+                {isActive && hasSub && (
+                  <SubcategoryBubble
+                    data={d.subcategories!}
+                    total={d.amount}
+                    color={color}
+                  />
+                )}
               </li>
             )
           })}
