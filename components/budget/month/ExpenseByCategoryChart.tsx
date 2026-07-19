@@ -38,13 +38,39 @@ function SubcategoryBubble({
   color: string
 }) {
   return (
-    <div className="absolute left-full top-1/2 z-50 ml-2 -translate-y-1/2">
-      {/* 말풍선 왼쪽 꼬리 */}
-      <div
-        className="absolute left-0 top-1/2 -translate-x-full -translate-y-1/2 border-y-[6px] border-r-[7px] border-y-transparent"
-        style={{ borderRightColor: "#f5f5f5" }}
-      />
-      <div className="min-w-[160px] rounded-lg border border-neutral-200 bg-neutral-50 p-2.5 shadow-lg">
+    <>
+      {/* 모바일: 항목 아래에 표시 */}
+      <div className="absolute left-0 top-full z-50 mt-1 w-full md:hidden">
+        {/* 말풍선 위쪽 꼬리 */}
+        <div
+          className="ml-3 border-x-[6px] border-b-[7px] border-x-transparent"
+          style={{ borderBottomColor: "#f5f5f5" }}
+        />
+        <div className="rounded-lg border border-neutral-200 bg-neutral-50 p-2.5 shadow-lg">
+          <div className="mb-1.5 text-[10px] font-semibold" style={{ color }}>
+            2차 카테고리
+          </div>
+          <ul className="space-y-1">
+            {data.map((d) => (
+              <li key={d.category} className="flex items-center justify-between gap-3 text-xs">
+                <span className="truncate text-neutral-700">{d.category}</span>
+                <span className="shrink-0 tabular-nums text-neutral-500">
+                  {((d.amount / total) * 100).toFixed(0)}%&nbsp;·&nbsp;{krwFormatter.format(d.amount)}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      {/* PC: 항목 오른쪽에 표시 */}
+      <div className="absolute left-full top-1/2 z-50 ml-2 hidden -translate-y-1/2 md:block">
+        {/* 말풍선 왼쪽 꼬리 */}
+        <div
+          className="absolute left-0 top-1/2 -translate-x-full -translate-y-1/2 border-y-[6px] border-r-[7px] border-y-transparent"
+          style={{ borderRightColor: "#f5f5f5" }}
+        />
+        <div className="min-w-[160px] rounded-lg border border-neutral-200 bg-neutral-50 p-2.5 shadow-lg">
         <div
           className="mb-1.5 text-[10px] font-semibold"
           style={{ color }}
@@ -61,8 +87,9 @@ function SubcategoryBubble({
             </li>
           ))}
         </ul>
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 
