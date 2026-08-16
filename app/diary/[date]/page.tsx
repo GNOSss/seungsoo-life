@@ -1,9 +1,11 @@
 import { notFound } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
+import Link from "next/link"
 import {
   isValidDate,
   formatDateKorean,
   getPrevDate,
+  getNextDate,
 } from "@/lib/utils/diary-date"
 import { QuestCheckRow } from "@/components/diary/day/QuestCheckRow"
 import { EntryInput } from "@/components/diary/day/EntryInput"
@@ -18,6 +20,7 @@ export default async function DiaryDatePage({
 
   const supabase = await createClient()
   const prevDate = getPrevDate(params.date)
+  const nextDate = getNextDate(params.date)
 
   const [
     { data: day, error: dayErr },
@@ -85,9 +88,25 @@ export default async function DiaryDatePage({
 
   return (
     <div className="space-y-4 p-3 md:space-y-6 md:p-6">
-      <h1 className="text-xl font-bold md:text-2xl">
-        {formatDateKorean(params.date)}
-      </h1>
+      <div className="flex items-center gap-3">
+        <Link
+          href={`/diary/${prevDate}`}
+          className="flex size-8 items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-neutral-700"
+          aria-label="전날"
+        >
+          ‹
+        </Link>
+        <h1 className="text-xl font-bold md:text-2xl">
+          {formatDateKorean(params.date)}
+        </h1>
+        <Link
+          href={`/diary/${nextDate}`}
+          className="flex size-8 items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-neutral-700"
+          aria-label="다음날"
+        >
+          ›
+        </Link>
+      </div>
 
       <div>
         <h2 className="mb-2 text-xs font-medium text-neutral-500">
