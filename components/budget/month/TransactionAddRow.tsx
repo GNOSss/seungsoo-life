@@ -58,8 +58,7 @@ export function TransactionAddRow({
     draft.day !== null &&
     draft.day >= 1 &&
     draft.day <= 31 &&
-    draft.amount !== null &&
-    draft.amount > 0
+    draft.amount !== null
 
   const save = () => {
     if (!allRequiredFilled) {
@@ -83,7 +82,6 @@ export function TransactionAddRow({
         return
       }
       setDraft(EMPTY_DRAFT)
-      setAdding(false)
     })
   }
 
@@ -167,7 +165,7 @@ export function TransactionAddRow({
         <input
           type="text"
           inputMode="numeric"
-          value={draft.amount ? draft.amount.toLocaleString("ko-KR") : ""}
+          value={draft.amount !== null ? draft.amount.toLocaleString("ko-KR") : ""}
           onChange={(e) => {
             const digits = e.target.value.replace(/\D/g, "")
             setDraft({
@@ -214,7 +212,7 @@ export function TransactionAddRow({
           }}
           disabled={pending}
         >
-          취소
+          완료
         </Button>
       </div>
     </div>

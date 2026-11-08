@@ -51,6 +51,7 @@ export function EntryInput({
           <textarea
             value={text}
             onChange={(e) => setText(e.target.value)}
+            onFocus={(e) => e.target.scrollIntoView({ block: "center" })}
             disabled={pending}
             rows={12}
             placeholder={"개발0018\n드라마0300\n잠0820"}
