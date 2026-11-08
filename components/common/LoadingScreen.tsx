@@ -3,7 +3,7 @@
 // 430x932를 넘기지 않고 화면 정중앙에 그 크기 그대로 고정된다.
 export function LoadingScreen() {
   return (
-    <div className="flex h-screen w-full items-center justify-center bg-white">
+    <div className="flex h-screen w-full items-center justify-center bg-[#ecdcd4]">
       <img
         src="/217720.gif"
         alt="로딩 중"
