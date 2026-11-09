@@ -7,7 +7,7 @@ import remarkGfm from "remark-gfm"
 import { Button } from "@/components/ui/button"
 import { ImportanceBadge } from "./ImportanceBadge"
 import type { TodoItemRow } from "./sortTodoItems"
-import { getKoreanWeekday } from "@/lib/utils/diary-todo-date"
+import { getKoreanWeekday, formatHm } from "@/lib/utils/diary-todo-date"
 import { updateTodoItem, deleteTodoItem } from "@/lib/actions/diary-todo-items"
 import type { TodoItemImportance } from "@/lib/validators/diary-todo-items"
 import { toast } from "sonner"
@@ -25,7 +25,7 @@ function toDraft(item: TodoItemRow): Draft {
   return {
     importance: item.importance,
     item_date: item.item_date ?? "",
-    item_time: item.item_time ?? "",
+    item_time: item.item_time ? formatHm(item.item_time) : "",
     target: item.target ?? "",
     title: item.title,
     detail: item.detail ?? "",

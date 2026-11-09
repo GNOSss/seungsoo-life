@@ -3,7 +3,7 @@
 import { cn } from "@/lib/utils"
 import { ImportanceBadge } from "./ImportanceBadge"
 import type { TodoItemRow } from "./sortTodoItems"
-import { getKoreanWeekday, formatYymmdd, isPastDate } from "@/lib/utils/diary-todo-date"
+import { getKoreanWeekday, formatYymmdd, formatHm, isPastDate } from "@/lib/utils/diary-todo-date"
 import { updateTodoItem } from "@/lib/actions/diary-todo-items"
 import type { TodoItemImportance } from "@/lib/validators/diary-todo-items"
 
@@ -27,8 +27,8 @@ export function TodoCard({
         <ImportanceBadge importance={item.importance} onCycle={cycleImportance} />
         {hasSchedule && (
           <span className={cn("text-xs tabular-nums text-neutral-500", past && "text-red-600")}>
-            {formatYymmdd(item.item_date!).replace(/^(\d{2})(\d{2})(\d{2})$/, "$1/$2/$3")}(
-            {getKoreanWeekday(item.item_date!)}) {item.item_time ?? ""}
+            {formatYymmdd(item.item_date!)}({getKoreanWeekday(item.item_date!)})
+            {item.item_time ? ` ${formatHm(item.item_time)}` : ""}
           </span>
         )}
       </div>

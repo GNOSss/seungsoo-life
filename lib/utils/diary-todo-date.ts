@@ -8,7 +8,11 @@ export function getKoreanWeekday(dateStr: string): string {
 
 export function formatYymmdd(dateStr: string): string {
   const [y, m, d] = dateStr.split("-")
-  return `${y.slice(2)}${m}${d}`
+  return `${y.slice(2)}.${m}.${d}`
+}
+
+export function formatHm(timeStr: string): string {
+  return timeStr.slice(0, 5)
 }
 
 export function isPastDate(dateStr: string): boolean {

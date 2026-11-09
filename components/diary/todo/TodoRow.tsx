@@ -4,7 +4,7 @@ import { useState } from "react"
 import { cn } from "@/lib/utils"
 import { ImportanceBadge } from "./ImportanceBadge"
 import type { TodoItemRow } from "./sortTodoItems"
-import { getKoreanWeekday, formatYymmdd, isPastDate } from "@/lib/utils/diary-todo-date"
+import { getKoreanWeekday, formatYymmdd, formatHm, isPastDate } from "@/lib/utils/diary-todo-date"
 import { updateTodoItem } from "@/lib/actions/diary-todo-items"
 import type { TodoItemImportance } from "@/lib/validators/diary-todo-items"
 
@@ -41,8 +41,8 @@ export function TodoRow({
         {item.item_date ? formatYymmdd(item.item_date) : "—"}
       </span>
       <span>{item.item_date ? getKoreanWeekday(item.item_date) : "—"}</span>
-      <span className="tabular-nums">{item.item_time ?? "—"}</span>
-      <span className="truncate text-neutral-500">{item.target ?? "—"}</span>
+      <span className="tabular-nums">{item.item_time ? formatHm(item.item_time) : "—"}</span>
+      <span className="ml-1 truncate text-neutral-500">{item.target ?? "—"}</span>
       {editing ? (
         <input
           autoFocus
