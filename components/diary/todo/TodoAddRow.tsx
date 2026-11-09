@@ -63,40 +63,40 @@ export function TodoAddRow({ kind }: { kind: TodoItemKind }) {
   return (
     <div className="space-y-2 border-t border-neutral-100 px-2 py-2">
       <div className="grid grid-cols-2 gap-2 md:grid-cols-[56px_1fr_36px_1fr_1fr_2fr]">
-        <div>
+        <div className="min-w-0">
           <label className="mb-1 block text-[10px] text-neutral-400 md:hidden">중요도</label>
           <ImportanceBadge
             importance={draft.importance}
             onCycle={(next) => setDraft({ ...draft, importance: next })}
           />
         </div>
-        <div>
+        <div className="min-w-0">
           <label className="mb-1 block text-[10px] text-neutral-400 md:hidden">날짜</label>
           <input
             type="date"
             value={draft.item_date}
             onChange={(e) => setDraft({ ...draft, item_date: e.target.value })}
             disabled={pending}
-            className="w-full rounded border border-neutral-300 px-1 py-1 text-sm"
+            className="w-full min-w-0 rounded border border-neutral-300 px-1 py-1 text-xs"
           />
         </div>
-        <div>
+        <div className="min-w-0">
           <label className="mb-1 block text-[10px] text-neutral-400 md:hidden">요일</label>
-          <div className="flex h-full min-h-[30px] items-center rounded border border-neutral-200 bg-neutral-50 px-2 text-sm text-neutral-500">
+          <div className="flex h-full min-h-[30px] items-center justify-center rounded border border-neutral-200 bg-neutral-50 px-2 text-sm text-neutral-500">
             {draft.item_date ? getKoreanWeekday(draft.item_date) : "—"}
           </div>
         </div>
-        <div>
+        <div className="min-w-0">
           <label className="mb-1 block text-[10px] text-neutral-400 md:hidden">시간</label>
           <input
             type="time"
             value={draft.item_time}
             onChange={(e) => setDraft({ ...draft, item_time: e.target.value })}
             disabled={pending}
-            className="w-full rounded border border-neutral-300 px-1 py-1 text-sm"
+            className="w-full min-w-0 rounded border border-neutral-300 px-1 py-1 text-xs"
           />
         </div>
-        <div>
+        <div className="min-w-0">
           <label className="mb-1 block text-[10px] text-neutral-400 md:hidden">대상</label>
           <input
             type="text"
@@ -107,7 +107,7 @@ export function TodoAddRow({ kind }: { kind: TodoItemKind }) {
             className="w-full rounded border border-neutral-300 px-2 py-1 text-sm"
           />
         </div>
-        <div className="col-span-2 md:col-span-1">
+        <div className="col-span-2 min-w-0 md:col-span-1">
           <label className="mb-1 block text-[10px] text-neutral-400 md:hidden">항목</label>
           <input
             autoFocus
