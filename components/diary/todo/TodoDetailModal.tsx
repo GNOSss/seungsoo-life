@@ -183,7 +183,7 @@ export function TodoDetailModal({
                   value={draft.detail}
                   onChange={(e) => setDraft({ ...draft, detail: e.target.value })}
                   rows={8}
-                  className="block w-full resize-y rounded border border-neutral-300 px-3 py-2 font-mono text-sm leading-relaxed"
+                  className="block w-full resize-y rounded border border-neutral-300 px-3 py-2 font-mono text-base leading-relaxed"
                 />
               )}
             </div>
