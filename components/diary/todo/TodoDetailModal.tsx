@@ -113,20 +113,22 @@ export function TodoDetailModal({
               />
             </div>
 
-            <div className="grid grid-cols-3 gap-3">
-              <div>
-                <label className="mb-1 block text-xs text-neutral-500">날짜</label>
-                <input
-                  type="date"
-                  value={draft.item_date}
-                  onChange={(e) => setDraft({ ...draft, item_date: e.target.value })}
-                  className="h-11 w-full rounded border border-neutral-300 px-2 text-sm"
-                />
-              </div>
-              <div>
-                <label className="mb-1 block text-xs text-neutral-500">요일</label>
-                <div className="flex h-11 items-center rounded border border-neutral-200 bg-neutral-50 px-2 text-sm text-neutral-500">
-                  {draft.item_date ? getKoreanWeekday(draft.item_date) : "—"}
+            <div className="space-y-2">
+              <div className="flex items-end gap-2">
+                <div className="min-w-0 flex-1">
+                  <label className="mb-1 block text-xs text-neutral-500">날짜</label>
+                  <input
+                    type="date"
+                    value={draft.item_date}
+                    onChange={(e) => setDraft({ ...draft, item_date: e.target.value })}
+                    className="h-11 w-full rounded border border-neutral-300 px-2 text-sm"
+                  />
+                </div>
+                <div className="shrink-0">
+                  <label className="mb-1 block text-xs text-neutral-500">요일</label>
+                  <div className="flex h-11 w-11 items-center justify-center rounded border border-neutral-200 bg-neutral-50 text-sm text-neutral-500">
+                    {draft.item_date ? getKoreanWeekday(draft.item_date) : "—"}
+                  </div>
                 </div>
               </div>
               <div>

@@ -2,16 +2,18 @@
 
 import { TodoRow } from "./TodoRow"
 import { TodoCard } from "./TodoCard"
-import { sortTodoItems, type TodoItemRow } from "./sortTodoItems"
+import { sortTodoItems, type TodoItemRow, type TodoSortMode } from "./sortTodoItems"
 
 export function TodoList({
   items,
+  sortMode,
   onOpenDetail,
 }: {
   items: TodoItemRow[]
+  sortMode: TodoSortMode
   onOpenDetail: (id: string) => void
 }) {
-  const sorted = sortTodoItems(items)
+  const sorted = sortTodoItems(items, sortMode)
 
   if (sorted.length === 0) {
     return <p className="px-2 py-4 text-sm text-neutral-400">항목이 없습니다.</p>

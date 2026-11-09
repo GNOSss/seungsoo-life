@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import { cn } from "@/lib/utils"
 import { ImportanceBadge } from "./ImportanceBadge"
 import type { TodoItemRow } from "./sortTodoItems"
@@ -14,6 +15,19 @@ export function TodoCard({
   item: TodoItemRow
   onOpenDetail: (id: string) => void
 }) {
+  const [editing, setEditing] = useState(false)
+  const [title, setTitle] = useState(item.title)
+
+  const saveTitle = () => {
+    setEditing(false)
+    const trimmed = title.trim()
+    if (!trimmed || trimmed === item.title) {
+      setTitle(item.title)
+      return
+    }
+    updateTodoItem({ id: item.id, title: trimmed })
+  }
+
   const cycleImportance = (next: TodoItemImportance) => {
     updateTodoItem({ id: item.id, importance: next })
   }
@@ -26,13 +40,41 @@ export function TodoCard({
       <div className="flex items-center justify-between">
         <ImportanceBadge importance={item.importance} onCycle={cycleImportance} />
         {hasSchedule && (
-          <span className={cn("text-xs tabular-nums text-neutral-500", past && "text-red-600")}>
-            {formatYymmdd(item.item_date!)}({getKoreanWeekday(item.item_date!)})
+          <span className="text-xs text-neutral-500">
+            <span className={cn("font-bold tabular-nums", past && "text-red-600")}>
+              {formatYymmdd(item.item_date!)}
+            </span>
+            ({getKoreanWeekday(item.item_date!)})
             {item.item_time ? ` ${formatHm(item.item_time)}` : ""}
           </span>
         )}
       </div>
-      <p className="mt-1 font-bold">{item.title}</p>
+
+      {editing ? (
+        <input
+          autoFocus
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          onBlur={saveTitle}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") saveTitle()
+            if (e.key === "Escape") {
+              setTitle(item.title)
+              setEditing(false)
+            }
+          }}
+          className="mt-1 w-full rounded border border-neutral-300 px-2 py-1 font-bold"
+        />
+      ) : (
+        <button
+          type="button"
+          onClick={() => setEditing(true)}
+          className="mt-1 block w-full text-left font-bold"
+        >
+          {item.title}
+        </button>
+      )}
+
       {item.target && (
         <div className="mt-1 flex items-center justify-between">
           <span className="text-xs text-neutral-500">👤 {item.target}</span>
