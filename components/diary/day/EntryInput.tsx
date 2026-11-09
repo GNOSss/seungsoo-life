@@ -55,7 +55,7 @@ export function EntryInput({
             disabled={pending}
             rows={12}
             placeholder={"개발0018\n드라마0300\n잠0820"}
-            className="block w-full rounded border border-neutral-300 px-3 py-2 font-mono text-sm leading-relaxed"
+            className="block w-full rounded border border-neutral-300 px-3 py-2 font-mono text-base leading-relaxed"
           />
         </div>
         <div>
