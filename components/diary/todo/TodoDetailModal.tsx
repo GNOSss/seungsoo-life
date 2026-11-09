@@ -113,7 +113,7 @@ export function TodoDetailModal({
               />
             </div>
 
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-3 gap-3">
               <div className="min-w-0">
                 <label className="mb-1 block text-xs text-neutral-500">날짜</label>
                 <input
