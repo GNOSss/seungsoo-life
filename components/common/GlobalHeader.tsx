@@ -7,12 +7,19 @@ import { UserMenu } from "@/components/common/UserMenu"
 
 const NAV_ITEMS = [
   { label: "가계부", href: "/budget" },
+  { label: "To Do", href: "/diary/notes" },
   { label: "일기장", href: "/diary" },
   { label: "운동기록", href: "/workout" },
 ] as const
 
 export function GlobalHeader({ user }: { user: { email: string } | null }) {
   const pathname = usePathname()
+
+  // 가장 구체적인(긴) href를 가진 항목만 활성화 — "/diary"와 "/diary/notes"처럼
+  // 경로가 겹칠 때 두 메뉴가 동시에 활성화되는 것을 방지
+  const activeHref = NAV_ITEMS.map((i) => i.href)
+    .filter((href) => pathname === href || pathname.startsWith(href + "/"))
+    .sort((a, b) => b.length - a.length)[0]
 
   return (
     <header className="border-b border-neutral-200">
@@ -23,7 +30,7 @@ export function GlobalHeader({ user }: { user: { email: string } | null }) {
         {/* 중앙 메뉴 */}
         <div className="flex items-center gap-3 md:gap-6">
           {NAV_ITEMS.map((item) => {
-            const isActive = pathname.startsWith(item.href)
+            const isActive = item.href === activeHref
             return (
               <Link
                 key={item.href}

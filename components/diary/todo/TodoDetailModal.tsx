@@ -52,6 +52,7 @@ export function TodoDetailModal({
       setAskDelete(false)
       setPreviewDetail(false)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, item?.id])
 
   if (!item || !draft) return null
