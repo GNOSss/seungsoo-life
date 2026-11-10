@@ -55,6 +55,18 @@ export function TodoDetailModal({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, item?.id])
 
+  // 모달이 열려있는 동안 배경 페이지 스크롤을 잠금.
+  // 잠그지 않으면 iOS가 textarea 포커스 시 뒤쪽 페이지를 함께 스크롤시켜
+  // 클릭한 행 아래의 나머지 행 높이만큼 배경이 밀리는 현상이 발생함.
+  useEffect(() => {
+    if (!open) return
+    const original = document.body.style.overflow
+    document.body.style.overflow = "hidden"
+    return () => {
+      document.body.style.overflow = original
+    }
+  }, [open])
+
   if (!item || !draft) return null
 
   const save = () => {
