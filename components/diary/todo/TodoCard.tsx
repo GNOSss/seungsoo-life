@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import Link from "next/link"
 import { cn } from "@/lib/utils"
 import { ImportanceBadge } from "./ImportanceBadge"
 import type { TodoItemRow } from "./sortTodoItems"
@@ -8,13 +9,7 @@ import { getKoreanWeekday, formatYymmdd, formatHm, isPastDate } from "@/lib/util
 import { updateTodoItem } from "@/lib/actions/diary-todo-items"
 import type { TodoItemImportance } from "@/lib/validators/diary-todo-items"
 
-export function TodoCard({
-  item,
-  onOpenDetail,
-}: {
-  item: TodoItemRow
-  onOpenDetail: (id: string) => void
-}) {
+export function TodoCard({ item }: { item: TodoItemRow }) {
   const [editing, setEditing] = useState(false)
   const [title, setTitle] = useState(item.title)
 
@@ -78,24 +73,16 @@ export function TodoCard({
       {item.target && (
         <div className="mt-1 flex items-center justify-between">
           <span className="text-xs text-neutral-500">👤 {item.target}</span>
-          <button
-            type="button"
-            onClick={() => onOpenDetail(item.id)}
-            className="text-xs text-neutral-400"
-          >
+          <Link href={`/diary/notes/${item.id}`} className="text-xs text-neutral-400">
             상세 ⋯
-          </button>
+          </Link>
         </div>
       )}
       {!item.target && (
         <div className="mt-1 flex justify-end">
-          <button
-            type="button"
-            onClick={() => onOpenDetail(item.id)}
-            className="text-xs text-neutral-400"
-          >
+          <Link href={`/diary/notes/${item.id}`} className="text-xs text-neutral-400">
             상세 ⋯
-          </button>
+          </Link>
         </div>
       )}
     </div>

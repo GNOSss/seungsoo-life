@@ -7,11 +7,9 @@ import { sortTodoItems, type TodoItemRow, type TodoSortMode } from "./sortTodoIt
 export function TodoList({
   items,
   sortMode,
-  onOpenDetail,
 }: {
   items: TodoItemRow[]
   sortMode: TodoSortMode
-  onOpenDetail: (id: string) => void
 }) {
   const sorted = sortTodoItems(items, sortMode)
 
@@ -23,8 +21,8 @@ export function TodoList({
     <div>
       {sorted.map((item) => (
         <div key={item.id}>
-          <TodoRow item={item} onOpenDetail={onOpenDetail} />
-          <TodoCard item={item} onOpenDetail={onOpenDetail} />
+          <TodoRow item={item} />
+          <TodoCard item={item} />
         </div>
       ))}
     </div>

@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import Link from "next/link"
 import { cn } from "@/lib/utils"
 import { ImportanceBadge } from "./ImportanceBadge"
 import type { TodoItemRow } from "./sortTodoItems"
@@ -8,13 +9,7 @@ import { getKoreanWeekday, formatYymmdd, formatHm, isPastDate } from "@/lib/util
 import { updateTodoItem } from "@/lib/actions/diary-todo-items"
 import type { TodoItemImportance } from "@/lib/validators/diary-todo-items"
 
-export function TodoRow({
-  item,
-  onOpenDetail,
-}: {
-  item: TodoItemRow
-  onOpenDetail: (id: string) => void
-}) {
+export function TodoRow({ item }: { item: TodoItemRow }) {
   const [editing, setEditing] = useState(false)
   const [title, setTitle] = useState(item.title)
 
@@ -67,14 +62,13 @@ export function TodoRow({
           {item.title}
         </button>
       )}
-      <button
-        type="button"
-        onClick={() => onOpenDetail(item.id)}
+      <Link
+        href={`/diary/notes/${item.id}`}
         className="text-neutral-400 hover:text-neutral-700"
         aria-label="상세보기"
       >
         ⋯
-      </button>
+      </Link>
     </div>
   )
 }

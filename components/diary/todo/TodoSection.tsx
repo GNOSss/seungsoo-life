@@ -3,7 +3,6 @@
 import { useState } from "react"
 import { TodoList } from "./TodoList"
 import { TodoAddRow } from "./TodoAddRow"
-import { TodoDetailModal } from "./TodoDetailModal"
 import type { TodoItemRow, TodoSortMode } from "./sortTodoItems"
 import type { TodoItemKind } from "@/lib/validators/diary-todo-items"
 import {
@@ -27,9 +26,7 @@ export function TodoSection({
   kind: TodoItemKind
   items: TodoItemRow[]
 }) {
-  const [openId, setOpenId] = useState<string | null>(null)
   const [sortMode, setSortMode] = useState<TodoSortMode>("default")
-  const selected = items.find((i) => i.id === openId) ?? null
 
   return (
     <div className="rounded border border-neutral-200">
@@ -45,13 +42,8 @@ export function TodoSection({
           </SelectContent>
         </Select>
       </div>
-      <TodoList items={items} sortMode={sortMode} onOpenDetail={setOpenId} />
+      <TodoList items={items} sortMode={sortMode} />
       <TodoAddRow kind={kind} />
-      <TodoDetailModal
-        item={selected}
-        open={openId !== null}
-        onOpenChange={(open) => !open && setOpenId(null)}
-      />
     </div>
   )
 }
