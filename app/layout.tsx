@@ -22,6 +22,9 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: "#000000",
+  // 키보드가 뜰 때 layout viewport 자체를 줄여줘서 vh/position:fixed가
+  // 깨지지 않게 함 (지원 브라우저: iOS 17+/최신 Chrome).
+  interactiveWidget: "resizes-content",
 }
 
 export default async function RootLayout({

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useTransition, useEffect, useRef } from "react"
+import { useState, useTransition, useEffect } from "react"
 import { Drawer } from "vaul"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
@@ -45,9 +45,6 @@ export function TodoDetailModal({
   const [askDelete, setAskDelete] = useState(false)
   const [previewDetail, setPreviewDetail] = useState(false)
   const [pending, startTransition] = useTransition()
-  const [kbOffset, setKbOffset] = useState(0)
-  const [maxH, setMaxH] = useState<number | null>(null)
-  const scrollAreaRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (open && item) setDraft(toDraft(item))
@@ -67,28 +64,6 @@ export function TodoDetailModal({
     document.body.style.overflow = "hidden"
     return () => {
       document.body.style.overflow = original
-    }
-  }, [open])
-
-  // iOS 키보드가 뜨면 visualViewport(실제 보이는 영역)가 layout viewport보다
-  // 작아지는데, max-h-[85vh]는 layout viewport 기준이라 어긋남 — 드로어가
-  // 키보드 뒤로 밀려 들어가며 빈 공간/깨진 레이아웃이 보이던 원인.
-  // visualViewport 기준으로 높이와 하단 오프셋을 직접 계산해 보정.
-  useEffect(() => {
-    if (!open) return
-    const vv = window.visualViewport
-    if (!vv) return
-    const update = () => {
-      const offset = window.innerHeight - vv.height - vv.offsetTop
-      setKbOffset(Math.max(0, offset))
-      setMaxH(vv.height * 0.85)
-    }
-    update()
-    vv.addEventListener("resize", update)
-    vv.addEventListener("scroll", update)
-    return () => {
-      vv.removeEventListener("resize", update)
-      vv.removeEventListener("scroll", update)
     }
   }, [open])
 
@@ -135,20 +110,13 @@ export function TodoDetailModal({
     <Drawer.Root open={open} onOpenChange={onOpenChange} dismissible={!pending}>
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 z-40 bg-black/40" />
-        <Drawer.Content
-          className="fixed left-0 right-0 z-50 mx-auto flex max-w-md flex-col rounded-t-xl border-t border-neutral-200 bg-white"
-          style={{ bottom: kbOffset, maxHeight: maxH ?? "85vh" }}
-        >
+        <Drawer.Content className="fixed bottom-0 left-0 right-0 z-50 mx-auto flex max-h-[85vh] max-w-md flex-col rounded-t-xl border-t border-neutral-200 bg-white">
           <div className="mx-auto mt-2 h-1 w-12 shrink-0 rounded-full bg-neutral-300" />
           <Drawer.Title className="px-4 pt-3 text-base font-semibold">
             항목 상세
           </Drawer.Title>
 
-          <div
-            ref={scrollAreaRef}
-            className="flex-1 space-y-3 overflow-y-auto px-4 py-3"
-            data-vaul-no-drag
-          >
+          <div className="flex-1 space-y-3 overflow-y-auto px-4 py-3" data-vaul-no-drag>
             <div>
               <label className="mb-1 block text-xs text-neutral-500">중요도</label>
               <ImportanceBadge
