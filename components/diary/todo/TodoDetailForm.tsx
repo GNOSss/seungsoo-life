@@ -97,12 +97,12 @@ export function TodoDetailForm({ item }: { item: TodoItemRow }) {
             type="date"
             value={draft.item_date}
             onChange={(e) => setDraft({ ...draft, item_date: e.target.value })}
-            className="box-border h-11 w-full min-w-0 rounded border border-neutral-300 px-1 text-xs"
+            className="mx-auto box-border block h-11 w-[90%] min-w-0 rounded border border-neutral-300 px-1 text-xs"
           />
         </div>
         <div className="min-w-0 overflow-hidden">
           <label className="mb-1 block text-xs text-neutral-500">요일</label>
-          <div className="box-border flex h-11 w-full items-center justify-center rounded border border-neutral-300 bg-neutral-50 text-xs text-neutral-500">
+          <div className="mx-auto box-border flex h-11 w-[90%] items-center justify-center rounded border border-neutral-300 bg-neutral-50 text-xs text-neutral-500">
             {draft.item_date ? getKoreanWeekday(draft.item_date) : "—"}
           </div>
         </div>
@@ -112,7 +112,7 @@ export function TodoDetailForm({ item }: { item: TodoItemRow }) {
             type="time"
             value={draft.item_time}
             onChange={(e) => setDraft({ ...draft, item_time: e.target.value })}
-            className="box-border h-11 w-full min-w-0 rounded border border-neutral-300 px-1 text-xs"
+            className="mx-auto box-border block h-11 w-[90%] min-w-0 rounded border border-neutral-300 px-1 text-xs"
           />
         </div>
       </div>
