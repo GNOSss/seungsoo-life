@@ -80,17 +80,7 @@ export function TodoDetailForm({ item }: { item: TodoItemRow }) {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-2">
-        <button
-          type="button"
-          onClick={() => router.push(backHref)}
-          className="flex size-8 items-center justify-center rounded-full text-neutral-400 hover:bg-neutral-100 hover:text-neutral-700"
-          aria-label="뒤로"
-        >
-          ‹
-        </button>
-        <h1 className="text-lg font-bold">항목 상세</h1>
-      </div>
+      <h1 className="text-lg font-bold">항목 상세</h1>
 
       <div>
         <label className="mb-1 block text-xs text-neutral-500">중요도</label>
@@ -101,28 +91,28 @@ export function TodoDetailForm({ item }: { item: TodoItemRow }) {
       </div>
 
       <div className="grid grid-cols-3 gap-3">
-        <div className="min-w-0">
+        <div className="min-w-0 overflow-hidden">
           <label className="mb-1 block text-xs text-neutral-500">날짜</label>
           <input
             type="date"
             value={draft.item_date}
             onChange={(e) => setDraft({ ...draft, item_date: e.target.value })}
-            className="h-11 w-full min-w-0 rounded border border-neutral-300 px-1 text-xs"
+            className="box-border h-11 w-full min-w-0 rounded border border-neutral-300 px-1 text-xs"
           />
         </div>
-        <div className="min-w-0">
+        <div className="min-w-0 overflow-hidden">
           <label className="mb-1 block text-xs text-neutral-500">요일</label>
-          <div className="flex h-11 w-full items-center justify-center rounded border border-neutral-200 bg-neutral-50 text-sm text-neutral-500">
+          <div className="box-border flex h-11 w-full items-center justify-center rounded border border-neutral-300 bg-neutral-50 text-xs text-neutral-500">
             {draft.item_date ? getKoreanWeekday(draft.item_date) : "—"}
           </div>
         </div>
-        <div className="min-w-0">
+        <div className="min-w-0 overflow-hidden">
           <label className="mb-1 block text-xs text-neutral-500">시간</label>
           <input
             type="time"
             value={draft.item_time}
             onChange={(e) => setDraft({ ...draft, item_time: e.target.value })}
-            className="h-11 w-full min-w-0 rounded border border-neutral-300 px-1 text-xs"
+            className="box-border h-11 w-full min-w-0 rounded border border-neutral-300 px-1 text-xs"
           />
         </div>
       </div>
