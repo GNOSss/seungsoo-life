@@ -97,7 +97,7 @@ export function TodoDetailForm({ item }: { item: TodoItemRow }) {
             type="date"
             value={draft.item_date}
             onChange={(e) => setDraft({ ...draft, item_date: e.target.value })}
-            className="mx-auto box-border block h-11 w-[90%] min-w-0 rounded border border-neutral-300 px-1 text-xs"
+            className="mx-auto box-border block h-11 w-[90%] min-w-0 rounded border border-neutral-300 px-1 text-xs leading-[2.75rem]"
           />
         </div>
         <div className="min-w-0 overflow-hidden">
@@ -112,7 +112,7 @@ export function TodoDetailForm({ item }: { item: TodoItemRow }) {
             type="time"
             value={draft.item_time}
             onChange={(e) => setDraft({ ...draft, item_time: e.target.value })}
-            className="mx-auto box-border block h-11 w-[90%] min-w-0 rounded border border-neutral-300 px-1 text-xs"
+            className="mx-auto box-border block h-11 w-[90%] min-w-0 rounded border border-neutral-300 px-1 text-xs leading-[2.75rem]"
           />
         </div>
       </div>
